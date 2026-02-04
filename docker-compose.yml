@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ontrackia_ojt
+      POSTGRES_USER: ontrackia
+      POSTGRES_PASSWORD: ontrackia_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://ontrackia:ontrackia_password@postgres:5432/ontrackia_ojt
+      - MONGODB_URI=mongodb://mongodb:27017/ontrackia_evidences
+    depends_on:
+      - postgres
+      - mongodb
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+
+volumes:
+  postgres_data:
+  mongo_data:

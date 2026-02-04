@@ -1,0 +1,172 @@
+{
+    "name": "4. Notificación OJT Completado",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "ojt-completed",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "name": "Webhook OJT Completed",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                250,
+                300
+            ],
+            "webhookId": "ojt-completed"
+        },
+        {
+            "parameters": {
+                "url": "http://backend:8000/api/ojt/progress/={{ $json.person_id }}",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpHeaderAuth",
+                "options": {}
+            },
+            "name": "Obtener Progreso OJT",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 3,
+            "position": [
+                450,
+                300
+            ],
+            "credentials": {
+                "httpHeaderAuth": {
+                    "id": "1",
+                    "name": "Ontrackia API Token"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "number": [
+                        {
+                            "value1": "={{ $json.progress_percentage }}",
+                            "operation": "equal",
+                            "value2": 100
+                        }
+                    ]
+                }
+            },
+            "name": "OJT 100% Completo?",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                650,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "fromEmail": "noreply@ontrackia.com",
+                "toEmail": "={{ $json.supervisor_email }}",
+                "subject": "🎓 OJT Completado - Validación Requerida",
+                "emailType": "html",
+                "message": "<h2>🎓 Formación OJT Completada</h2>\n<p><strong>Empleado:</strong> {{ $json.person_name }}</p>\n<p><strong>Progreso:</strong> {{ $json.validated_tasks }}/{{ $json.total_tasks }} tareas validadas</p>\n<p><strong>Estado:</strong> ✅ 100% Completo</p>\n<hr>\n<p>El empleado ha completado todas las tareas de formación OJT.</p>\n<p><strong>ACCIÓN REQUERIDA:</strong> Revisar y validar las tareas pendientes.</p>\n<a href=\"https://ontrackia.com/ojt/{{ $json.person_id }}\">Ver Progreso OJT</a>"
+            },
+            "name": "Email a Supervisor",
+            "type": "n8n-nodes-base.emailSend",
+            "typeVersion": 2,
+            "position": [
+                850,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "fromEmail": "noreply@ontrackia.com",
+                "toEmail": "={{ $json.person_email }}",
+                "subject": "🎉 ¡Felicitaciones! OJT Completado",
+                "emailType": "html",
+                "message": "<h2>🎉 ¡Felicitaciones!</h2>\n<p>Has completado todas las tareas de formación OJT.</p>\n<p><strong>Progreso:</strong> {{ $json.validated_tasks }}/{{ $json.total_tasks }} tareas</p>\n<hr>\n<p>Tu supervisor revisará las tareas y procederá con la validación final.</p>\n<p>Una vez validado, podrás recibir tu autorización.</p>"
+            },
+            "name": "Email a Empleado",
+            "type": "n8n-nodes-base.emailSend",
+            "typeVersion": 2,
+            "position": [
+                850,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ { \"success\": true, \"message\": \"Notifications sent\" } }}"
+            },
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1,
+            "position": [
+                1050,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook OJT Completed": {
+            "main": [
+                [
+                    {
+                        "node": "Obtener Progreso OJT",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Obtener Progreso OJT": {
+            "main": [
+                [
+                    {
+                        "node": "OJT 100% Completo?",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OJT 100% Completo?": {
+            "main": [
+                [
+                    {
+                        "node": "Email a Supervisor",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Email a Empleado",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Email a Supervisor": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Email a Empleado": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "active": true,
+    "settings": {},
+    "id": "4"
+}

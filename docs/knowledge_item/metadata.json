@@ -1,0 +1,14 @@
+{
+    "title": "OnTrackIA OJT V2.0 Compliance Framework",
+    "summary": "Unified orchestration layer for OnTrackIA OJT, integrating forensic compliance (SHA-256), reactive PWA architecture, and RAC LPTA 66 logic. Features reactive Sync Indicators, mobile-optimized UI (44px touch targets), 'Senior Auditor Coach' AI based on ICAO Doc 9859, and hardened security (Global Rate Limiting, RBAC). Documents the formal audit certification, 'Morado Oscuro' branding benchmarks, and the forensic integrity verification system.",
+    "references": [
+        {
+            "type": "conversation_id",
+            "value": "eeeda8a5-f140-4604-ae59-5503312af1c7"
+        },
+        {
+            "type": "conversation_id",
+            "value": "636d0ea7-5b64-470a-8266-3d9bcad36772 (Feb 4: Local Data Loss Incident & Recovery)"
+        }
+    ]
+}
