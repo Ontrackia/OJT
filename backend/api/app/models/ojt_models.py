@@ -86,9 +86,15 @@ class OJTEvidence(Base):
     file_path = Column(Text, nullable=False)
     file_hash_sha256 = Column(String(64), nullable=False)
     
+    # Geolocalización Forense (V2.0 - Trazabilidad Ultimate)
+    latitude = Column(String(20), nullable=False)  # Formato: "XX.XXXXXX"
+    longitude = Column(String(20), nullable=False)  # Formato: "XX.XXXXXX"
+    gps_accuracy = Column(String(10), nullable=True)  # Precisión en metros
+    gps_timestamp = Column(DateTime, nullable=False)  # Timestamp de captura GPS
+    
     uploaded_by = Column(Integer, nullable=False)
     uploaded_at = Column(DateTime, default=datetime.utcnow)
     description = Column(Text, nullable=True)
     
     def __repr__(self):
-        return f"<OJTEvidence {self.evidence_type}>"
+        return f"<OJTEvidence {self.evidence_type} @ ({self.latitude}, {self.longitude})>"

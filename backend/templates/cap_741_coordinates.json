@@ -1,0 +1,218 @@
+{
+    "format_id": "cap_741_log",
+    "format_name": "UK CAA CAP 741 - Practical Training Log",
+    "authority": "UK Civil Aviation Authority (CAA)",
+    "standard": "CAP 741 - ATA Chapter Task Registration",
+    "version": "2024.Edition8",
+    "page_size": {
+        "width_mm": 210,
+        "height_mm": 297,
+        "format": "A4"
+    },
+    "notes": [
+        "Formato UK CAA CAP 741 para registro de tareas ATA",
+        "Coordenadas desde esquina INFERIOR IZQUIERDAAlso",
+        "Incluye campos de ATA chapter y task codes"
+    ],
+    "fields": [
+        {
+            "field_name": "trainee_name",
+            "label": "Trainee Name",
+            "x": 35,
+            "y": 260,
+            "font_size": 11,
+            "font_name": "Helvetica-Bold",
+            "max_width": 130,
+            "alignment": "left"
+        },
+        {
+            "field_name": "trainee_license",
+            "label": "License Reference",
+            "x": 35,
+            "y": 245,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 90,
+            "alignment": "left"
+        },
+        {
+            "field_name": "ata_chapter",
+            "label": "ATA Chapter",
+            "x": 35,
+            "y": 215,
+            "font_size": 11,
+            "font_name": "Helvetica-Bold",
+            "max_width": 30,
+            "alignment": "left"
+        },
+        {
+            "field_name": "task_code",
+            "label": "Task Code",
+            "x": 75,
+            "y": 215,
+            "font_size": 11,
+            "font_name": "Helvetica-Bold",
+            "max_width": 50,
+            "alignment": "left"
+        },
+        {
+            "field_name": "task_description",
+            "label": "Task Description",
+            "x": 35,
+            "y": 200,
+            "font_size": 9,
+            "font_name": "Helvetica",
+            "max_width": 150,
+            "alignment": "left"
+        },
+        {
+            "field_name": "aircraft_type",
+            "label": "Aircraft Type",
+            "x": 35,
+            "y": 170,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 90,
+            "alignment": "left"
+        },
+        {
+            "field_name": "aircraft_registration",
+            "label": "Aircraft Registration",
+            "x": 135,
+            "y": 170,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 50,
+            "alignment": "left"
+        },
+        {
+            "field_name": "date_performed",
+            "label": "Date Performed",
+            "x": 35,
+            "y": 155,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 60,
+            "alignment": "left"
+        },
+        {
+            "field_name": "duration_hours",
+            "label": "Duration (hours)",
+            "x": 110,
+            "y": 155,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 30,
+            "alignment": "right"
+        },
+        {
+            "field_name": "amm_reference",
+            "label": "AMM Reference",
+            "x": 35,
+            "y": 140,
+            "font_size": 9,
+            "font_name": "Helvetica",
+            "max_width": 100,
+            "alignment": "left"
+        },
+        {
+            "field_name": "tools_used",
+            "label": "Tools Used",
+            "x": 35,
+            "y": 125,
+            "font_size": 9,
+            "font_name": "Helvetica",
+            "max_width": 150,
+            "alignment": "left"
+        },
+        {
+            "field_name": "assessor_name",
+            "label": "Assessor Name",
+            "x": 35,
+            "y": 95,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 120,
+            "alignment": "left"
+        },
+        {
+            "field_name": "assessor_stamp",
+            "label": "Assessor Stamp Number",
+            "x": 35,
+            "y": 80,
+            "font_size": 9,
+            "font_name": "Helvetica",
+            "max_width": 70,
+            "alignment": "left"
+        },
+        {
+            "field_name": "assessment_date",
+            "label": "Assessment Date",
+            "x": 35,
+            "y": 65,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 60,
+            "alignment": "left"
+        },
+        {
+            "field_name": "competence_level",
+            "label": "Competence Level",
+            "x": 110,
+            "y": 65,
+            "font_size": 10,
+            "font_name": "Helvetica-Bold",
+            "max_width": 70,
+            "alignment": "left"
+        },
+        {
+            "field_name": "part145_org",
+            "label": "Part-145 Organisation",
+            "x": 35,
+            "y": 45,
+            "font_size": 9,
+            "font_name": "Helvetica",
+            "max_width": 140,
+            "alignment": "left"
+        },
+        {
+            "field_name": "approval_ref",
+            "label": "Approval Reference",
+            "x": 35,
+            "y": 30,
+            "font_size": 9,
+            "font_name": "Helvetica",
+            "max_width": 90,
+            "alignment": "left"
+        }
+    ],
+    "signature_areas": [
+        {
+            "area_name": "trainee_signature",
+            "x": 35,
+            "y": 105,
+            "width": 55,
+            "height": 18
+        },
+        {
+            "area_name": "assessor_signature",
+            "x": 105,
+            "y": 105,
+            "width": 55,
+            "height": 18
+        }
+    ],
+    "seal_position": {
+        "position": "bottom-right",
+        "x": 145,
+        "y": 8
+    },
+    "ata_chapters_supported": [
+        "21 - Air Conditioning",
+        "24 - Electrical Power",
+        "27 - Flight Controls",
+        "32 - Landing Gear",
+        "71 - Powerplant",
+        "79 - Oil System"
+    ]
+}

@@ -1,0 +1,169 @@
+{
+    "format_id": "aac_f1",
+    "format_name": "AAC Form F1 - Aircraft Maintenance Experience Certificate",
+    "authority": "Salvadoran Aviation Authority (AAC)",
+    "version": "2024.1",
+    "page_size": {
+        "width_mm": 210,
+        "height_mm": 297,
+        "format": "A4"
+    },
+    "notes": [
+        "Coordenadas medidas desde la esquina INFERIOR IZQUIERDA",
+        "1mm = 2.834645669 points en ReportLab",
+        "Usar herramienta de medición PDF para obtener coordenadas exactas"
+    ],
+    "fields": [
+        {
+            "field_name": "technician_name",
+            "label": "Nombre del Técnico",
+            "x": 45,
+            "y": 240,
+            "font_size": 11,
+            "font_name": "Helvetica-Bold",
+            "max_width": 120,
+            "alignment": "left"
+        },
+        {
+            "field_name": "license_number",
+            "label": "Número de Licencia",
+            "x": 45,
+            "y": 225,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 80,
+            "alignment": "left"
+        },
+        {
+            "field_name": "nationality",
+            "label": "Nacionalidad",
+            "x": 45,
+            "y": 210,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 60,
+            "alignment": "left"
+        },
+        {
+            "field_name": "aircraft_type",
+            "label": "Tipo de Aeronave",
+            "x": 45,
+            "y": 180,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 100,
+            "alignment": "left"
+        },
+        {
+            "field_name": "aircraft_registration",
+            "label": "Matrícula",
+            "x": 150,
+            "y": 180,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 40,
+            "alignment": "left"
+        },
+        {
+            "field_name": "total_hours",
+            "label": "Horas Totales",
+            "x": 45,
+            "y": 165,
+            "font_size": 11,
+            "font_name": "Helvetica-Bold",
+            "max_width": 40,
+            "alignment": "right"
+        },
+        {
+            "field_name": "period_from",
+            "label": "Período Desde",
+            "x": 45,
+            "y": 150,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 60,
+            "alignment": "left"
+        },
+        {
+            "field_name": "period_to",
+            "label": "Período Hasta",
+            "x": 120,
+            "y": 150,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 60,
+            "alignment": "left"
+        },
+        {
+            "field_name": "supervisor_name",
+            "label": "Nombre del Supervisor",
+            "x": 45,
+            "y": 100,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 120,
+            "alignment": "left"
+        },
+        {
+            "field_name": "supervisor_license",
+            "label": "Licencia del Supervisor",
+            "x": 45,
+            "y": 85,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 80,
+            "alignment": "left"
+        },
+        {
+            "field_name": "certification_date",
+            "label": "Fecha de Certificación",
+            "x": 45,
+            "y": 70,
+            "font_size": 10,
+            "font_name": "Helvetica",
+            "max_width": 60,
+            "alignment": "left"
+        },
+        {
+            "field_name": "organization_name",
+            "label": "Organización",
+            "x": 45,
+            "y": 50,
+            "font_size": 9,
+            "font_name": "Helvetica",
+            "max_width": 150,
+            "alignment": "left"
+        },
+        {
+            "field_name": "part145_approval",
+            "label": "Aprobación EASA Part-145",
+            "x": 45,
+            "y": 35,
+            "font_size": 9,
+            "font_name": "Helvetica",
+            "max_width": 80,
+            "alignment": "left"
+        }
+    ],
+    "signature_areas": [
+        {
+            "area_name": "technician_signature",
+            "x": 45,
+            "y": 120,
+            "width": 60,
+            "height": 20
+        },
+        {
+            "area_name": "supervisor_signature",
+            "x": 120,
+            "y": 120,
+            "width": 60,
+            "height": 20
+        }
+    ],
+    "seal_position": {
+        "position": "bottom-right",
+        "x": 150,
+        "y": 10
+    }
+}
