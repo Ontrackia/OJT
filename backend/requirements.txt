@@ -22,7 +22,7 @@ bcrypt==4.1.2
 
 # === AI & ML ===
 openai==1.30.5
-mistralai==0.1.8
+mistralai>=1.0.0
 anthropic==0.18.1
 
 # === RAG & EMBEDDINGS (CEREBRO TRIDENTE) ===
@@ -69,10 +69,10 @@ prometheus-client==0.19.0
 prometheus-fastapi-instrumentator==6.1.0
 
 # === TESTING (Development) ===
-pytest==8.0.0
+pytest==7.4.4
 pytest-asyncio==0.23.4
 pytest-cov==4.1.0
-httpx==0.26.0
+httpx==0.25.2
 faker==22.6.0
 
 # === CODE QUALITY (Development) ===
@@ -81,9 +81,8 @@ flake8==7.0.0
 isort==5.13.2
 mypy==1.8.0
 
-# === SECURITY AUDIT ===
-safety==3.0.1
-bandit==1.7.6
+# safety==3.0.1
+# bandit==1.7.6
 
 # ===================================
 # DEPLOYMENT NOTES

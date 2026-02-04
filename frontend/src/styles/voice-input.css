@@ -1,0 +1,229 @@
+/**
+ * Voice Input Styles - Professional tactical dictation
+ */
+
+.voice-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.voice-input-textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: var(--font-primary);
+    resize: vertical;
+    transition: all var(--transition-fast);
+}
+
+.voice-input-textarea:focus {
+    outline: none;
+    border-color: var(--info-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.voice-input-button {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(135deg, var(--info-blue), #1e40af);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.voice-input-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.voice-input-button.recording {
+    background: linear-gradient(135deg, var(--critical-red), #dc2626);
+    animation: pulse-recording 1.5s infinite;
+}
+
+@keyframes pulse-recording {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.9;
+        transform: scale(1.05);
+    }
+}
+
+/* Voice Waveform */
+.voice-waveform {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.voice-waveform-bar {
+    width: 3px;
+    background: white;
+    border-radius: 2px;
+    animation: waveform 0.8s infinite ease-in-out;
+}
+
+.voice-waveform-bar:nth-child(1) {
+    height: 8px;
+    animation-delay: 0s;
+}
+
+.voice-waveform-bar:nth-child(2) {
+    height: 12px;
+    animation-delay: 0.1s;
+}
+
+.voice-waveform-bar:nth-child(3) {
+    height: 16px;
+    animation-delay: 0.2s;
+}
+
+.voice-waveform-bar:nth-child(4) {
+    height: 12px;
+    animation-delay: 0.3s;
+}
+
+.voice-waveform-bar:nth-child(5) {
+    height: 8px;
+    animation-delay: 0.4s;
+}
+
+@keyframes waveform {
+
+    0%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    50% {
+        transform: scaleY(1.5);
+    }
+}
+
+/* Voice FAB (Floating Action Button) */
+.voice-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--info-blue), #1e40af);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.voice-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.voice-fab.recording {
+    background: linear-gradient(135deg, var(--critical-red), #dc2626);
+    animation: pulse-fab 1.5s infinite;
+}
+
+@keyframes pulse-fab {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.voice-waveform-fab {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.voice-waveform-fab .bar {
+    width: 4px;
+    background: white;
+    border-radius: 2px;
+    animation: waveform-fab 0.8s infinite ease-in-out;
+}
+
+.voice-waveform-fab .bar:nth-child(1) {
+    height: 12px;
+    animation-delay: 0s;
+}
+
+.voice-waveform-fab .bar:nth-child(2) {
+    height: 18px;
+    animation-delay: 0.1s;
+}
+
+.voice-waveform-fab .bar:nth-child(3) {
+    height: 24px;
+    animation-delay: 0.2s;
+}
+
+@keyframes waveform-fab {
+
+    0%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    50% {
+        transform: scaleY(1.5);
+    }
+}
+
+/* Unsupported message */
+.voice-input-unsupported {
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .voice-input-button {
+        position: static;
+        width: 100%;
+        margin-top: var(--spacing-sm);
+        justify-content: center;
+    }
+
+    .voice-fab {
+        width: 56px;
+        height: 56px;
+        bottom: 16px;
+        right: 16px;
+    }
+}

@@ -1,63 +1,98 @@
 /**
  * OnTrackIA OJT V2.0 - Global Styles
  * ==================================
- * Estilos globales con branding Morado Oscuro y Glassmorphism
+ * Professional Aviation Dashboard Styling (Garmin/Collins Aerospace Aesthetic)
  * 
- * @theme Morado Oscuro (#0a051a + #7c3aed)
+ * @theme Slate Blue / Charcoal (Night) + Neutral Gray (Day)
  * @standards Ergonomía Aeronáutica (44px touch targets)
  */
 
+/* Tema Base (Noche / Professional Bunker - Garmin Style) */
 :root {
-  /* Colores primarios - Morado Oscuro */
-  --primary: #7c3aed;
-  --primary-hover: #6d28d9;
-  --primary-active: #5b21b6;
-  
-  --bg-deep: #0a051a;
-  --bg-card: rgba(124, 58, 237, 0.05);
-  --bg-card-hover: rgba(124, 58, 237, 0.08);
-  
-  /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  
-  /* Texto */
-  --text-primary: #ffffff;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  
-  /* Estados */
+  /* Colores primarios - Seriedad & Steel Blue */
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-active: #1d4ed8;
+
+  --bg-deep: #0f172a;
+  /* Slate Blue oscuro */
+  --bg-card: #1e293b;
+  /* Charcoal */
+  --bg-card-hover: #334155;
+
+  /* Glassmorphism Noche (Sólido, legibilidad máxima) */
+  --glass-bg: rgba(30, 41, 59, 0.95);
+  --glass-border: rgba(148, 163, 184, 0.2);
+  --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+
+  /* Texto Noche - Alto Contraste */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-app-title: #f8fafc;
+
+  /* Estados - Colores Aeronáuticos Estándar */
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
   --info: #3b82f6;
-  
+
+  /* Selectores y Inputs */
+  --input-bg: #0f172a;
+  --input-border: #475569;
+
   /* Sync Indicator */
   --sync-online: #10b981;
   --sync-offline: #ef4444;
   --sync-syncing: #f59e0b;
-  
-  /* Touch Targets - Ergonomía Aeronáutica */
+
+  /* Touch Targets */
   --touch-min: 44px;
-  
+
   /* Espaciado */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
-  
-  /* Bordes y radios */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+
+  /* Bordes - Industrial Style (menos redondeados) */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
   --radius-full: 9999px;
-  
+
+  /* Fuentes */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+
   /* Transiciones */
   --transition-fast: 150ms ease-in-out;
   --transition-normal: 250ms ease-in-out;
   --transition-slow: 350ms ease-in-out;
+}
+
+/* Tema Día (High Altitude - Collins Style) */
+[data-theme='light'] {
+  --primary: #0f172a;
+  --primary-hover: #1e293b;
+  --primary-active: #334155;
+
+  --bg-deep: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+
+  --glass-bg: #ffffff;
+  --glass-border: #cbd5e1;
+  --glass-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-app-title: #0f172a;
+
+  --input-bg: #f8fafc;
+  --input-border: #cbd5e1;
 }
 
 /* Reset y base */
@@ -68,19 +103,18 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg-deep);
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Glassmorphism Card */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   box-shadow: var(--glass-shadow);
@@ -89,9 +123,7 @@ body {
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.08);
   border-color: var(--primary);
-  transform: translateY(-2px);
 }
 
 /* Botones - Ergonomía 44px */
@@ -100,7 +132,7 @@ body {
   min-height: var(--touch-min);
   padding: 0 var(--spacing-lg);
   background: var(--primary);
-  color: var(--text-primary);
+  color: #ffffff;
   border: none;
   border-radius: var(--radius-sm);
   font-weight: 600;
@@ -115,18 +147,16 @@ body {
 
 .btn:hover {
   background: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
 }
 
 .btn:active {
   background: var(--primary-active);
-  transform: translateY(0);
 }
 
 .btn-secondary {
   background: transparent;
   border: 1px solid var(--glass-border);
+  color: var(--text-primary);
 }
 
 .btn-secondary:hover {
@@ -141,17 +171,18 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--glass-bg);
+  background: transparent;
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
+  color: var(--text-secondary);
 }
 
 .icon-button:hover {
   background: var(--primary);
   border-color: var(--primary);
-  transform: scale(1.05);
+  color: #ffffff;
 }
 
 /* Stats Grid */
@@ -164,7 +195,6 @@ body {
 
 .stat-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
@@ -173,7 +203,6 @@ body {
 
 .stat-card:hover {
   border-color: var(--primary);
-  transform: translateY(-2px);
 }
 
 .stat-value {
@@ -196,42 +225,59 @@ body {
   height: 12px;
   border-radius: var(--radius-full);
   transition: all var(--transition-normal);
-  box-shadow: 0 0 12px currentColor;
 }
 
 .sync-indicator.online {
   background: var(--sync-online);
-  color: var(--sync-online);
+  box-shadow: 0 0 8px var(--sync-online);
   animation: pulse-online 2s infinite;
 }
 
 .sync-indicator.offline {
   background: var(--sync-offline);
-  color: var(--sync-offline);
 }
 
 .sync-indicator.syncing {
   background: var(--sync-syncing);
-  color: var(--sync-syncing);
   animation: pulse-syncing 1s infinite;
 }
 
 @keyframes pulse-online {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.6;
   }
 }
 
 @keyframes pulse-syncing {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.2);
   }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
 }
 
 /* Score Badge */
@@ -320,7 +366,6 @@ body {
 }
 
 .table tr:hover td {
-  background: var(--glass-bg);
   border-color: var(--primary);
 }
 
@@ -329,8 +374,100 @@ body {
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .glass-card {
     padding: var(--spacing-md);
   }
+}
+
+/* =============================================
+   ALERTAS CRÍTICAS - Sistema de Parpadeo V1
+   ============================================= */
+
+/* Parpadeo sutil para alertas críticas abiertas */
+@keyframes criticalPulse {
+
+  0%,
+  100% {
+    background: rgba(239, 68, 68, 0.15);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+
+  50% {
+    background: rgba(239, 68, 68, 0.35);
+    box-shadow: 0 0 20px 2px rgba(239, 68, 68, 0.3);
+  }
+}
+
+/* Parpadeo del borde para deadline vencido */
+@keyframes deadlineBlink {
+
+  0%,
+  100% {
+    border-left-color: #ef4444;
+  }
+
+  50% {
+    border-left-color: transparent;
+  }
+}
+
+/* Badge parpadeante para contadores críticos */
+@keyframes badgePulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.critical-blink {
+  animation: criticalPulse 1.5s ease-in-out infinite;
+}
+
+.deadline-overdue {
+  border-left: 4px solid #ef4444;
+  animation: deadlineBlink 0.8s ease-in-out infinite;
+}
+
+.badge-critical {
+  animation: badgePulse 1s ease-in-out infinite;
+}
+
+/* Spinner para carga */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Animación de entrada para cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeInUp 0.3s ease-out;
 }

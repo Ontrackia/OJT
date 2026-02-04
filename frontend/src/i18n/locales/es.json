@@ -1,0 +1,80 @@
+{
+    "common": {
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "create": "Crear",
+        "search": "Buscar",
+        "filter": "Filtrar",
+        "export": "Exportar",
+        "import": "Importar",
+        "close": "Cerrar",
+        "confirm": "Confirmar",
+        "back": "Volver",
+        "next": "Siguiente",
+        "previous": "Anterior",
+        "submit": "Enviar",
+        "loading": "Cargando",
+        "error": "Error",
+        "success": "Éxito",
+        "warning": "Advertencia",
+        "info": "Información"
+    },
+    "auth": {
+        "login": "Iniciar Sesión",
+        "logout": "Cerrar Sesión",
+        "email": "Correo Electrónico",
+        "password": "Contraseña",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "signIn": "Ingresar",
+        "security": "AES-256 Encriptado"
+    },
+    "sms": {
+        "title": "SMS - Safety Management System",
+        "voluntaryReport": "Reporte Voluntario SMS",
+        "createReport": "Crear Reporte",
+        "description": "Descripción",
+        "location": "Ubicación",
+        "severity": "Severidad",
+        "severityLow": "Baja",
+        "severityMedium": "Media",
+        "severityHigh": "Alta",
+        "severityCritical": "Crítica",
+        "reportReceived": "Reporte recibido. Gracias por contribuir a la seguridad."
+    },
+    "audit": {
+        "title": "Auditoría",
+        "createNew": "Nueva Auditoría",
+        "findings": "Hallazgos",
+        "rca": "Análisis de Causa Raíz",
+        "evidence": "Evidencia",
+        "status": "Estado",
+        "scope": "Alcance",
+        "auditor": "Auditor"
+    },
+    "evidence": {
+        "upload": "Subir Evidencia",
+        "sealed": "Sellado y Encriptado",
+        "custody": "Custodia 5 Años",
+        "integrity": "Integridad Verificada"
+    },
+    "offline": {
+        "online": "En Línea",
+        "offline": "Modo Offline",
+        "syncing": "Sincronizando",
+        "pending": "pendientes"
+    },
+    "voice": {
+        "dictate": "Dictar",
+        "recording": "Grabando",
+        "stopRecording": "Detener Grabación",
+        "startRecording": "Iniciar Grabación",
+        "notSupported": "Dictado por voz no disponible en este navegador"
+    },
+    "theme": {
+        "light": "Modo Día",
+        "dark": "Modo Noche",
+        "nvis": "Modo NVIS"
+    }
+}

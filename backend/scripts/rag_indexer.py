@@ -62,10 +62,8 @@ class RAGKnowledgeIndexer:
         Path(chromadb_path).mkdir(parents=True, exist_ok=True)
         
         # Initialize ChromaDB client
-        self.chroma_client = chromadb.Client(Settings(
-            chroma_db_impl="duckdb+parquet",
-            persist_directory=chromadb_path
-        ))
+        # Initialize ChromaDB client (Modern API)
+        self.chroma_client = chromadb.PersistentClient(path=chromadb_path)
         
         # Get or create collection
         self.collection = self.chroma_client.get_or_create_collection(
@@ -312,7 +310,7 @@ class RAGKnowledgeIndexer:
                 stats['failed_files'] += 1
         
         # Persist changes
-        self.chroma_client.persist()
+        # Changes are auto-persisted in modern ChromaDB
         
         # Print final stats
         print("\n" + "=" * 70)

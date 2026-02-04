@@ -100,8 +100,8 @@ class GlobalRegulatoryCrawler:
             'name': 'ANAC - Agência Nacional de Aviação Civil',
             'abbreviation': 'ANAC',
             'urls': {
-                'rbac145': 'https://www.anac.gov.br/assuntos/legislacao/legislacao-1/rbac-e-is/rbac/rbac-145',
-                'sgso': 'https://www.anac.gov.br/assuntos/seguranca-operacional/sgso'
+                'rbac145': 'https://www.anac.gov.br/assuntos/legislacao/legislacao-1/rbac-e-is/rbac/rbac-145/@@download/file/RBAC%20145%20Amdt%2009.pdf',
+                'sgso': 'https://www.anac.gov.br/assuntos/legislacao/legislacao-1/rbac-e-is/rbac/rbac-145'
             },
             'keywords': ['RBAC 145', 'RBAC 66', 'SGSO', 'RBHA']
         },

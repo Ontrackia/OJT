@@ -1,0 +1,24 @@
+{
+  "territory": "AUSTRALIA",
+  "authority": {
+    "name": "CASA - Civil Aviation Safety Authority",
+    "abbreviation": "CASA",
+    "urls": {
+      "part145": "https://www.casa.gov.au/regulations-and-policy/current-rules",
+      "sms": "https://www.casa.gov.au/safety-management/safety-management-systems"
+    },
+    "keywords": [
+      "CASR Part 145",
+      "AMO",
+      "Safety Management"
+    ]
+  },
+  "stats": {
+    "territory": "AUSTRALIA",
+    "downloaded": 0,
+    "converted": 0,
+    "failed": 2,
+    "files": []
+  },
+  "last_updated": "2026-02-04T15:13:54.468074"
+}

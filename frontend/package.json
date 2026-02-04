@@ -1,39 +1,32 @@
 {
-    "name": "ontrackia-ojt-frontend",
-    "version": "2.0.0",
-    "description": "OnTrackIA OJT V2.0 - Offline-First PWA con Branding Morado Oscuro",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview",
-        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
-    },
+    "name": "ontrackia-v1-core",
+    "version": "1.0.0",
+    "private": true,
     "dependencies": {
-        "browser-image-compression": "^2.0.2",
-        "dexie": "^3.2.4",
-        "dexie-react-hooks": "^1.1.7",
-        "lucide-react": "^0.316.0",
+        "@testing-library/jest-dom": "^5.16.5",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-photo-view": "^1.2.7",
-        "react-simple-maps": "^3.0.0",
-        "workbox-window": "^7.0.0"
+        "react-router-dom": "^6.8.0",
+        "react-scripts": "5.0.1",
+        "web-vitals": "^2.1.4",
+        "lucide-react": "^0.263.1",
+        "idb": "^7.1.1",
+        "react-i18next": "^12.1.4",
+        "i18next": "^22.4.9"
     },
-    "devDependencies": {
-        "@types/react": "^18.2.55",
-        "@types/react-dom": "^18.2.19",
-        "@vitejs/plugin-react": "^4.2.1",
-        "eslint": "^8.56.0",
-        "eslint-plugin-react": "^7.33.2",
-        "eslint-plugin-react-hooks": "^4.6.0",
-        "eslint-plugin-react-refresh": "^0.4.5",
-        "vite": "^5.1.0",
-        "vite-plugin-pwa": "^0.17.5"
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
     },
-    "engines": {
-        "node": ">=18.0.0",
-        "npm": ">=9.0.0"
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
     },
     "browserslist": {
         "production": [
@@ -46,36 +39,5 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    },
-    "pwa": {
-        "name": "OnTrackIA OJT",
-        "short_name": "OJT",
-        "description": "On-the-Job Training Management - Offline-First PWA",
-        "theme_color": "#7c3aed",
-        "background_color": "#0a051a",
-        "display": "standalone",
-        "orientation": "portrait-primary",
-        "icons": [
-            {
-                "src": "/icon-192x192.png",
-                "sizes": "192x192",
-                "type": "image/png",
-                "purpose": "any maskable"
-            },
-            {
-                "src": "/icon-512x512.png",
-                "sizes": "512x512",
-                "type": "image/png",
-                "purpose": "any maskable"
-            }
-        ]
-    },
-    "config": {
-        "theme": {
-            "primary": "#7c3aed",
-            "background_deep": "#0a051a",
-            "touch_target_min": "44px",
-            "glassmorphism": true
-        }
     }
 }

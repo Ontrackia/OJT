@@ -1,0 +1,24 @@
+{
+  "territory": "UK",
+  "authority": {
+    "name": "UK CAA - Civil Aviation Authority",
+    "abbreviation": "UK CAA",
+    "urls": {
+      "part145": "https://www.caa.co.uk/commercial-industry/aircraft/aircraft-maintenance/",
+      "cap": "https://publicapps.caa.co.uk/docs/33/CAP%20562%20Civil%20Aircraft%20Airworthiness.pdf"
+    },
+    "keywords": [
+      "Part-145",
+      "CAP 562",
+      "CAME"
+    ]
+  },
+  "stats": {
+    "territory": "UK",
+    "downloaded": 1,
+    "converted": 0,
+    "failed": 2,
+    "files": []
+  },
+  "last_updated": "2026-02-04T15:11:03.655403"
+}

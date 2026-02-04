@@ -1,19 +1,63 @@
-node_modules/
-__pycache__/
-*.pyc
+# OnTrackIA V1-Core - Security-First .gitignore
+
+# ==================== CRITICAL SECURITY ====================
 .env
-.DS_Store
-*.log
-.vscode/
-.idea/
-dist/
-build/
-*.egg-info/
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+secrets/
+credentials/
+
+# ==================== PYTHON ====================
+__pycache__/
+*.py[cod]
+*.pyc
+*.so
 venv/
 env/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
 .pytest_cache/
 .coverage
 *.sqlite
 *.db
+
+# ==================== NODE.JS ====================
+node_modules/
+npm-debug.log*
+package-lock.json
+/frontend/build
+
+# ==================== EVIDENCE & KNOWLEDGE ====================
+evidence_vault/
+knowledge_vault/
 uploads/
+*.pdf
+*.docx
+
+# ==================== LOGS & DATA ====================
+logs/
+*.log
+ai_logs/
+chroma_db/
+
+# ==================== IDE ====================
+.vscode/
+.idea/
+*.sublime-*
+
+# ==================== OS ====================
+.DS_Store
+Thumbs.db
+*~
+
+# ==================== TEMP ====================
 /tmp/
+*.tmp
+*.swp
+*.bak

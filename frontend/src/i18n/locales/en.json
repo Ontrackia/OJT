@@ -1,0 +1,80 @@
+{
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "create": "Create",
+        "search": "Search",
+        "filter": "Filter",
+        "export": "Export",
+        "import": "Import",
+        "close": "Close",
+        "confirm": "Confirm",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "submit": "Submit",
+        "loading": "Loading",
+        "error": "Error",
+        "success": "Success",
+        "warning": "Warning",
+        "info": "Information"
+    },
+    "auth": {
+        "login": "Login",
+        "logout": "Logout",
+        "email": "Email Address",
+        "password": "Password",
+        "forgotPassword": "Forgot your password?",
+        "signIn": "Sign In",
+        "security": "AES-256 Encrypted"
+    },
+    "sms": {
+        "title": "SMS - Safety Management System",
+        "voluntaryReport": "Voluntary SMS Report",
+        "createReport": "Create Report",
+        "description": "Description",
+        "location": "Location",
+        "severity": "Severity",
+        "severityLow": "Low",
+        "severityMedium": "Medium",
+        "severityHigh": "High",
+        "severityCritical": "Critical",
+        "reportReceived": "Report received. Thank you for contributing to safety."
+    },
+    "audit": {
+        "title": "Audit",
+        "createNew": "New Audit",
+        "findings": "Findings",
+        "rca": "Root Cause Analysis",
+        "evidence": "Evidence",
+        "status": "Status",
+        "scope": "Scope",
+        "auditor": "Auditor"
+    },
+    "evidence": {
+        "upload": "Upload Evidence",
+        "sealed": "Sealed & Encrypted",
+        "custody": "5 Year Custody",
+        "integrity": "Integrity Verified"
+    },
+    "offline": {
+        "online": "Online",
+        "offline": "Offline Mode",
+        "syncing": "Syncing",
+        "pending": "pending"
+    },
+    "voice": {
+        "dictate": "Dictate",
+        "recording": "Recording",
+        "stopRecording": "Stop Recording",
+        "startRecording": "Start Recording",
+        "notSupported": "Voice dictation not available in this browser"
+    },
+    "theme": {
+        "light": "Day Mode",
+        "dark": "Night Mode",
+        "nvis": "NVIS Mode"
+    }
+}

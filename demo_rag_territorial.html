@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnTrackIA - Demo RAG Territorial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a051a 0%, #1a0f2e 100%);
+            color: #f9fafb;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #9ca3af;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .card {
+            background: rgba(26, 15, 46, 0.6);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        label {
+            display: block;
+            color: #d1d5db;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        select,
+        textarea,
+        button {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(10, 5, 26, 0.8);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 8px;
+            color: #f9fafb;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7c3aed;
+        }
+
+        .spinner {
+            border: 3px solid rgba(124, 58, 237, 0.2);
+            border-top: 3px solid #7c3aed;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            background: rgba(10, 5, 26, 0.6);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .territory-badge {
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .relevance {
+            color: #22c55e;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .authority {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .document {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #7c3aed;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #d1d5db;
+        }
+
+        .score {
+            text-align: center;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .score-label {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Language Selector -->
+        <div style="text-align: right; margin-bottom: 20px;">
+            <button id="btnES" onclick="setLanguage('es')"
+                style="width: auto; padding: 8px 20px; margin-right: 10px; background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">
+                ES
+            </button>
+            <button id="btnEN" onclick="setLanguage('en')"
+                style="width: auto; padding: 8px 20px; background: rgba(124, 58, 237, 0.2); font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">
+                EN
+            </button>
+        </div>
+    </div>
+
+    <h1 id="title">OnTrackIA - Territorial RAG Demo</h1>
+    <p class="subtitle" id="subtitle">Sistema Cielos Abiertos - 13 Jurisdicciones Aeronáuticas</p>
+
+    <div class="card">
+        <label for="territory">Territorio / Jurisdicción</label>
+        <select id="territory">
+            <option value="" id="optGlobal">Global (All Regulations)</option>
+            <option value="AUSTRALIA">Australia (CASA)</option>
+            <option value="BRAZIL" id="optBrazil">Brazil (ANAC)</option>
+            <option value="CANADA" id="optCanada">Canada (TCCA)</option>
+            <option value="CHILE">Chile (DGAC)</option>
+            <option value="CHINA">China (CAAC)</option>
+            <option value="COSTA_RICA">Costa Rica (DGAC)</option>
+            <option value="ECUADOR">Ecuador (DGAC)</option>
+            <option value="KENYA" id="optKenya">Kenya (KCAA)</option>
+            <option value="MALTA">Malta (TM CAD)</option>
+            <option value="MEXICO" id="optMexico">Mexico (AFAC)</option>
+            <option value="QATAR">Qatar (QCAA)</option>
+            <option value="SOUTH_AFRICA" id="optSouthAfrica">South Africa (SACAA)</option>
+            <option value="SWITZERLAND" id="optSwitzerland">Switzerland (FOCA)</option>
+            <option value="UK" id="optUK">United Kingdom (UK CAA)</option>
+        </select>
+
+        <label for="query">Consulta / Task Description</label>
+        <textarea id="query"
+            placeholder="Ej: OJT supervisor signature requirements">OJT supervisor signature requirements</textarea>
+
+        <button id="analyzeBtn" onclick="analyze()"><span id="btnAnalyze">Analyze with RAG</span></button>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Consultando ChromaDB...</p>
+    </div>
+
+    <div id="results"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://46.225.79.232:8000/api/v2/audit/analyze';
+
+        // Translations
+        const translations = {
+            es: {
+                title: 'OnTrackIA - Territorial RAG Demo',
+                subtitle: 'Sistema Cielos Abiertos - 13 Jurisdicciones Aeronáuticas',
+                labelTerritory: 'Territorio / Jurisdicción',
+                optGlobal: 'Global (Todas las Regulaciones)',
+                optBrazil: 'Brasil (ANAC)',
+                optCanada: 'Canadá (TCCA)',
+                optKenya: 'Kenia (KCAA)',
+                optMexico: 'México (AFAC)',
+                optSouthAfrica: 'Sudáfrica (SACAA)',
+                optSwitzerland: 'Suiza (FOCA)',
+                optUK: 'Reino Unido (UK CAA)',
+                labelQuery: 'Consulta / Descripción de la Tarea',
+                btnAnalyze: 'Analizar con RAG',
+                loadingText: 'Consultando ChromaDB...',
+                scoreLabel: 'Puntuación de Cumplimiento',
+                referencesTitle: 'Referencias Normativas',
+                relevanceLabel: 'Relevancia',
+                errorTitle: 'Error',
+                alertQuery: 'Por favor, escribe una consulta'
+            },
+            en: {
+                title: 'OnTrackIA - Territorial RAG Demo',
+                subtitle: 'Cielos Abiertos System - 13 Aviation Jurisdictions',
+                labelTerritory: 'Territory / Jurisdiction',
+                optGlobal: 'Global (All Regulations)',
+                optBrazil: 'Brazil (ANAC)',
+                optCanada: 'Canada (TCCA)',
+                optKenya: 'Kenya (KCAA)',
+                optMexico: 'Mexico (AFAC)',
+                optSouthAfrica: 'South Africa (SACAA)',
+                optSwitzerland: 'Switzerland (FOCA)',
+                optUK: 'United Kingdom (UK CAA)',
+                labelQuery: 'Query / Task Description',
+                btnAnalyze: 'Analyze with RAG',
+                loadingText: 'Querying ChromaDB...',
+                scoreLabel: 'Compliance Score',
+                referencesTitle: 'Regulatory References',
+                relevanceLabel: 'Relevance',
+                errorTitle: 'Error',
+                alertQuery: 'Please provide a query'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'es';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+
+            // Update UI
+            const t = translations[lang];
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('labelTerritory').textContent = t.labelTerritory;
+            document.getElementById('optGlobal').textContent = t.optGlobal;
+            document.getElementById('optBrazil').textContent = t.optBrazil;
+            document.getElementById('optCanada').textContent = t.optCanada;
+            document.getElementById('optKenya').textContent = t.optKenya;
+            document.getElementById('optMexico').textContent = t.optMexico;
+            document.getElementById('optSouthAfrica').textContent = t.optSouthAfrica;
+            document.getElementById('optSwitzerland').textContent = t.optSwitzerland;
+            document.getElementById('optUK').textContent = t.optUK;
+            document.getElementById('labelQuery').textContent = t.labelQuery;
+            document.getElementById('btnAnalyze').textContent = t.btnAnalyze;
+            document.getElementById('loadingText').textContent = t.loadingText;
+
+            // Update button styles
+            if (lang === 'es') {
+                document.getElementById('btnES').style.background = 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)';
+                document.getElementById('btnEN').style.background = 'rgba(124, 58, 237, 0.2)';
+            } else {
+                document.getElementById('btnEN').style.background = 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)';
+                document.getElementById('btnES').style.background = 'rgba(124, 58, 237, 0.2)';
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
+        });
+
+        async function analyze() {
+            const territory = document.getElementById('territory').value;
+            const query = document.getElementById('query').value;
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const btn = document.getElementById('analyzeBtn');
+
+            if (!query.trim()) {
+                alert(translations[currentLang].alertQuery);
+                return;
+            }
+
+            // Show loading
+            loading.style.display = 'block';
+            results.innerHTML = '';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        evidence_id: `demo_${Date.now()}`,
+                        task_description: query,
+                        territory: territory || null
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                displayResults(data);
+
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="card" style="border-color: #ef4444;">
+                        <h3 style="color: #ef4444; margin-bottom: 10px;">❌ Error</h3>
+                        <p style="color: #9ca3af;">${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        function displayResults(data) {
+            const results = document.getElementById('results');
+            const t = translations[currentLang];
+
+            let html = `
+                <div class="card score">
+                    <div class="score-value">${data.compliance_score}%</div>
+                    <div class="score-label">${t.scoreLabel}</div>
+                </div>
+            `;
+
+            // Mistral Analysis (if available)
+            if (data.mistral_analysis) {
+                html += `
+                    <div class="card" style="border-left: 4px solid #7c3aed;">
+                        <h3 style="margin-bottom: 15px; color: #a78bfa;">
+                            ${currentLang === 'es' ? 'Análisis Senior Auditor (Mistral AI)' : 'Senior Auditor Analysis (Mistral AI)'}
+                        </h3>
+                        <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; line-height: 1.8; color: #e5e7eb; white-space: pre-wrap;">
+                            ${data.mistral_analysis}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="card">
+                    <h3 style="margin-bottom: 20px; color: #7c3aed;">
+                        ${t.referencesTitle} (${data.results_count})
+                    </h3>
+                    <div class="results">
+            `;
+
+            data.references.forEach((ref, i) => {
+                const relevancePercent = ((1 - Math.abs(ref.relevance)) * 100).toFixed(1);
+                html += `
+                    <div class="result-item">
+                        <div class="result-header">
+                            <span class="territory-badge">${ref.territory}</span>
+                            <span class="relevance">${t.relevanceLabel}: ${relevancePercent}%</span>
+                        </div>
+                        <div class="authority">${ref.authority}</div>
+                        <div class="document">${ref.document}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            results.innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>

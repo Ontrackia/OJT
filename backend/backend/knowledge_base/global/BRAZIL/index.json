@@ -1,0 +1,25 @@
+{
+  "territory": "BRAZIL",
+  "authority": {
+    "name": "ANAC - Ag\u00eancia Nacional de Avia\u00e7\u00e3o Civil",
+    "abbreviation": "ANAC",
+    "urls": {
+      "rbac145": "https://www.anac.gov.br/assuntos/legislacao/legislacao-1/rbac-e-is/rbac/rbac-145/@@download/file/RBAC%20145%20Amdt%2009.pdf",
+      "sgso": "https://www.anac.gov.br/assuntos/legislacao/legislacao-1/rbac-e-is/rbac/rbac-145"
+    },
+    "keywords": [
+      "RBAC 145",
+      "RBAC 66",
+      "SGSO",
+      "RBHA"
+    ]
+  },
+  "stats": {
+    "territory": "BRAZIL",
+    "downloaded": 0,
+    "converted": 0,
+    "failed": 2,
+    "files": []
+  },
+  "last_updated": "2026-02-04T15:13:48.338830"
+}

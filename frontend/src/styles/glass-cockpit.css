@@ -1,0 +1,587 @@
+/**
+ * OnTrackIA V1-Core - Glass Cockpit Design System
+ * Boeing 787 / Tesla inspired technical interface
+ */
+
+:root {
+    /* === MODO DÍA (Light Mode) === */
+    --bg-primary-light: #f5f7fa;
+    --bg-secondary-light: #ffffff;
+    --bg-tertiary-light: #e8ecf1;
+
+    --text-primary-light: #1a1d29;
+    --text-secondary-light: #4a5568;
+    --text-tertiary-light: #718096;
+
+    --border-light: #cbd5e0;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+
+    /* === MODO NOCHE (Dark Mode) === */
+    --bg-primary-dark: #0a0e1a;
+    --bg-secondary-dark: #141824;
+    --bg-tertiary-dark: #1e2433;
+
+    --text-primary-dark: #e2e8f0;
+    --text-secondary-dark: #a0aec0;
+    --text-tertiary-dark: #718096;
+
+    --border-dark: #2d3748;
+    --shadow-dark: rgba(0, 0, 0, 0.5);
+
+    /* === COLORES AERONÁUTICOS === */
+    --safe-green: #10b981;
+    --safe-green-glow: rgba(16, 185, 129, 0.2);
+
+    --warning-amber: #f59e0b;
+    --warning-amber-glow: rgba(245, 158, 11, 0.2);
+
+    --critical-red: #ef4444;
+    --critical-red-glow: rgba(239, 68, 68, 0.2);
+
+    --info-blue: #3b82f6;
+    --info-blue-glow: rgba(59, 130, 246, 0.2);
+
+    --accent-cyan: #06b6d4;
+    --accent-cyan-glow: rgba(6, 182, 212, 0.2);
+
+    /* === TIPOGRAFÍA === */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+    /* === ESPACIADO === */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    /* === BORDES === */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+
+    /* === TRANSICIONES === */
+    --transition-fast: 150ms ease-in-out;
+    --transition-normal: 250ms ease-in-out;
+    --transition-slow: 350ms ease-in-out;
+}
+
+/* === TEMA CLARO === */
+[data-theme="light"] {
+    --bg-primary: var(--bg-primary-light);
+    --bg-secondary: var(--bg-secondary-light);
+    --bg-tertiary: var(--bg-tertiary-light);
+
+    --text-primary: var(--text-primary-light);
+    --text-secondary: var(--text-secondary-light);
+    --text-tertiary: var(--text-tertiary-light);
+
+    --border: var(--border-light);
+    --shadow: var(--shadow-light);
+}
+
+/* === TEMA OSCURO === */
+[data-theme="dark"] {
+    --bg-primary: var(--bg-primary-dark);
+    --bg-secondary: var(--bg-secondary-dark);
+    --bg-tertiary: var(--bg-tertiary-dark);
+
+    --text-primary: var(--text-primary-dark);
+    --text-secondary: var(--text-secondary-dark);
+    --text-tertiary: var(--text-tertiary-dark);
+
+    --border: var(--border-dark);
+    --shadow: var(--shadow-dark);
+}
+
+/* === GLASS COCKPIT COMPONENTS === */
+
+/* Panel de Instrumentos */
+.cockpit-panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: 0 4px 6px var(--shadow);
+    transition: all var(--transition-normal);
+}
+
+.cockpit-panel:hover {
+    box-shadow: 0 8px 12px var(--shadow);
+    transform: translateY(-2px);
+}
+
+/* Panel Colapsable */
+.cockpit-panel-collapsible {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.cockpit-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-tertiary);
+    cursor: pointer;
+    user-select: none;
+    transition: background var(--transition-fast);
+}
+
+.cockpit-panel-header:hover {
+    background: var(--bg-primary);
+}
+
+.cockpit-panel-content {
+    padding: var(--spacing-lg);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-slow);
+}
+
+.cockpit-panel-content.expanded {
+    max-height: 2000px;
+}
+
+/* Gauge Circular (Altímetro) */
+.cockpit-gauge {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 3px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 8px var(--shadow);
+}
+
+.cockpit-gauge-value {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.cockpit-gauge-label {
+    position: absolute;
+    bottom: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Gauge de Progreso (Variómetro) */
+.cockpit-progress {
+    position: relative;
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.cockpit-progress-bar {
+    height: 100%;
+    transition: width var(--transition-slow);
+    position: relative;
+}
+
+.cockpit-progress-bar.safe {
+    background: linear-gradient(90deg, var(--safe-green), #34d399);
+    box-shadow: 0 0 10px var(--safe-green-glow);
+}
+
+.cockpit-progress-bar.warning {
+    background: linear-gradient(90deg, var(--warning-amber), #fbbf24);
+    box-shadow: 0 0 10px var(--warning-amber-glow);
+}
+
+.cockpit-progress-bar.critical {
+    background: linear-gradient(90deg, var(--critical-red), #f87171);
+    box-shadow: 0 0 10px var(--critical-red-glow);
+}
+
+/* Status Indicator (LED) */
+.cockpit-led {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.cockpit-led.safe {
+    background: var(--safe-green);
+    box-shadow: 0 0 8px var(--safe-green-glow), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.cockpit-led.warning {
+    background: var(--warning-amber);
+    box-shadow: 0 0 8px var(--warning-amber-glow), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.cockpit-led.critical {
+    background: var(--critical-red);
+    box-shadow: 0 0 8px var(--critical-red-glow), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+    animation: pulse-critical 1.5s infinite;
+}
+
+.cockpit-led.offline {
+    background: #6b7280;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes pulse-critical {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Integrity Badge (Sello Dorado) */
+.integrity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1a1d29;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.integrity-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.5);
+}
+
+.integrity-badge-icon {
+    width: 14px;
+    height: 14px;
+}
+
+/* Technical ID (Monospace) */
+.technical-id {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--accent-cyan);
+    background: var(--bg-tertiary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    display: inline-block;
+}
+
+/* SHA-256 Hash Display */
+.hash-display {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    word-break: break-all;
+    letter-spacing: 0.02em;
+}
+
+/* Voice Recording Indicator */
+.voice-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--critical-red);
+    border-radius: var(--radius-md);
+    color: white;
+    font-weight: 600;
+    animation: pulse-voice 1s infinite;
+}
+
+@keyframes pulse-voice {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.voice-waveform {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.voice-waveform-bar {
+    width: 3px;
+    background: white;
+    border-radius: 2px;
+    animation: waveform 0.8s infinite ease-in-out;
+}
+
+.voice-waveform-bar:nth-child(1) {
+    height: 8px;
+    animation-delay: 0s;
+}
+
+.voice-waveform-bar:nth-child(2) {
+    height: 12px;
+    animation-delay: 0.1s;
+}
+
+.voice-waveform-bar:nth-child(3) {
+    height: 16px;
+    animation-delay: 0.2s;
+}
+
+.voice-waveform-bar:nth-child(4) {
+    height: 12px;
+    animation-delay: 0.3s;
+}
+
+.voice-waveform-bar:nth-child(5) {
+    height: 8px;
+    animation-delay: 0.4s;
+}
+
+@keyframes waveform {
+
+    0%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    50% {
+        transform: scaleY(1.5);
+    }
+}
+
+/* Evidence Thumbnail */
+.evidence-thumbnail {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 2px solid var(--border);
+    background: var(--bg-tertiary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.evidence-thumbnail:hover {
+    border-color: var(--info-blue);
+    transform: scale(1.05);
+}
+
+.evidence-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.evidence-badge {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: var(--spacing-xs);
+    font-size: 0.65rem;
+    color: white;
+    text-align: center;
+}
+
+.evidence-badge.custody {
+    background: var(--safe-green);
+}
+
+/* Status Bar Global */
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+.status-bar-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* Language Selector */
+.language-selector {
+    display: flex;
+    gap: var(--spacing-xs);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs);
+}
+
+.language-selector button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.language-selector button.active {
+    background: var(--info-blue);
+    color: white;
+}
+
+/* Offline Indicator */
+.offline-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.offline-indicator.online {
+    background: var(--safe-green-glow);
+    color: var(--safe-green);
+}
+
+.offline-indicator.offline {
+    background: var(--warning-amber-glow);
+    color: var(--warning-amber);
+}
+
+/* Loading Progress (Indexación MOE) */
+.loading-progress {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    max-width: 500px;
+}
+
+.loading-progress-bar {
+    height: 6px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin: var(--spacing-md) 0;
+}
+
+.loading-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--info-blue), var(--accent-cyan));
+    transition: width var(--transition-slow);
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent);
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.loading-progress-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.loading-progress-step {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.loading-progress-step.active {
+    color: var(--info-blue);
+    font-weight: 600;
+}
+
+.loading-progress-step.completed {
+    color: var(--safe-green);
+}
+
+/* Utilities */
+.text-mono {
+    font-family: var(--font-mono);
+}
+
+.text-safe {
+    color: var(--safe-green);
+}
+
+.text-warning {
+    color: var(--warning-amber);
+}
+
+.text-critical {
+    color: var(--critical-red);
+}
+
+.text-info {
+    color: var(--info-blue);
+}
+
+.glow-safe {
+    box-shadow: 0 0 10px var(--safe-green-glow);
+}
+
+.glow-warning {
+    box-shadow: 0 0 10px var(--warning-amber-glow);
+}
+
+.glow-critical {
+    box-shadow: 0 0 10px var(--critical-red-glow);
+}

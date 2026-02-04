@@ -1,0 +1,24 @@
+{
+  "territory": "CANADA",
+  "authority": {
+    "name": "TCCA - Transport Canada Civil Aviation",
+    "abbreviation": "TCCA",
+    "urls": {
+      "part145": "https://tc.canada.ca/en/aviation/reference-centre/canadian-aviation-regulations-cars",
+      "sms": "https://tc.canada.ca/en/aviation/commercial-air-services/safety-management-systems"
+    },
+    "keywords": [
+      "CAR 573",
+      "AMO",
+      "SMS"
+    ]
+  },
+  "stats": {
+    "territory": "CANADA",
+    "downloaded": 0,
+    "converted": 0,
+    "failed": 2,
+    "files": []
+  },
+  "last_updated": "2026-02-04T15:12:32.162708"
+}
