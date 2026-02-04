@@ -53,7 +53,8 @@ class SeniorAuditorCoachAgent:
     def analyze(
         self,
         task_description: str,
-        context: Dict
+        context: Dict,
+        territory: str = None
     ) -> Dict:
         """
         Analiza tarea usando RAG de normativa mundial
@@ -61,6 +62,7 @@ class SeniorAuditorCoachAgent:
         Args:
             task_description: Descripción de la tarea OJT
             context: Contexto adicional (aircraft, component, etc.)
+            territory: Filtro territorial (CANADA, BRAZIL, etc.) - opcional
         
         Returns:
             Análisis con compliance score y referencias
@@ -68,9 +70,9 @@ class SeniorAuditorCoachAgent:
         # Construir query RAG
         query_text = self._build_rag_query(task_description, context)
         
-        # Consultar ChromaDB
+        # Consultar ChromaDB (con filtro territorial si aplica)
         if self.collection:
-            rag_results = self._query_rag(query_text)
+            rag_results = self._query_rag(query_text, territory=territory)
         else:
             rag_results = self._mock_rag_results()
         
@@ -96,8 +98,9 @@ class SeniorAuditorCoachAgent:
             "risk_level": risk_level,
             "normative_references": normative_refs,
             "discrepancies": discrepancies,
-            "rag_insights": self._generate_insights(rag_results),
-            "confidence": rag_results.get('confidence', 0.75)
+            "rag_insights": self._generate_insights(rag_results, territory),
+            "confidence": rag_results.get('confidence', 0.75),
+            "territory": territory or "GLOBAL"
         }
     
     def _build_rag_query(self, task_description: str, context: Dict) -> str:
@@ -116,27 +119,55 @@ What are the regulatory requirements and compliance criteria?
 """
         return query.strip()
     
-    def _query_rag(self, query_text: str) -> Dict:
-        """Ejecuta query en ChromaDB"""
+    def _query_rag(self, query_text: str, territory: str = None) -> Dict:
+        """Ejecuta query en ChromaDB con filtro territorial opcional"""
         try:
+            # Query sin filtros primero (para máxima cobertura)
             results = self.collection.query(
                 query_texts=[query_text],
-                n_results=10,
-                where={
-                    "$or": [
-                        {"authority": "EASA"},
-                        {"authority": "FAA"},
-                        {"authority": "ICAO"},
-                        {"authority": "UK CAA"},
-                        {"authority": "RAC"}
-                    ]
-                }
+                n_results=20  # Más resultados para filtrado posterior
             )
             
+            # Filtrar por categorías relevantes post-query si es necesario
+            documents = results.get('documents', [[]])[0]
+            metadatas = results.get('metadatas', [[]])[0]
+            distances = results.get('distances', [[]])[0]
+            
+            # Priorizar documentos de auditoría y regulaciones
+            relevant_categories = [
+                'EASA_REGULATION',
+                'FAA_REGULATION',
+                'ICAO_STANDARD',
+                'UK_CAA_REGULATION',
+                'AUDIT_REQUIREMENT',
+                'LAR_REGULATION'
+            ]
+            
+            # Re-ordernar colocando categorías prioritarias primero
+            sorted_results = list(zip(documents, metadatas, distances))
+            sorted_results.sort(
+                key=lambda x: (
+                    # 1. Prioridad: match territorial exacto
+                    x[1].get('territory') == territory if territory else False,
+                    # 2. Prioridad: categoría relevante
+                    x[1].get('category') in relevant_categories,
+                    # 3. Prioridad: menor distance
+                    -x[2]
+                ),
+                reverse=True
+            )
+            
+            # Desempaquetar y tomar top 10
+            if sorted_results:
+                documents, metadatas, distances = zip(*sorted_results[:10])
+                documents = list(documents)
+                metadatas = list(metadatas)
+                distances = list(distances)
+            
             return {
-                "documents": results.get('documents', [[]])[0],
-                "metadatas": results.get('metadatas', [[]])[0],
-                "distances": results.get('distances', [[]])[0],
+                "documents": documents,
+                "metadatas": metadatas,
+                "distances": distances,
                 "confidence": self._calculate_rag_confidence(results)
             }
         except Exception as e:
@@ -214,12 +245,29 @@ What are the regulatory requirements and compliance criteria?
         for i, meta in enumerate(metadatas[:5]):  # Top 5
             relevance = 1 - distances[i] if i < len(distances) else 0.5
             
+            # Extraer authority de la categoría
+            category = meta.get('category', 'TECHNICAL_DOC')
+            category_label = meta.get('category_label', 'Unknown')
+            
+            # Mapear categoría a authority
+            authority_map = {
+                'EASA_REGULATION': 'EASA',
+                'FAA_REGULATION': 'FAA',
+                'ICAO_STANDARD': 'ICAO',
+                'UK_CAA_REGULATION': 'UK CAA',
+                'LAR_REGULATION': 'LAR',
+                'AUDIT_REQUIREMENT': 'OnTrackIA',
+                'OJT_STANDARD': 'OnTrackIA OJT'
+            }
+            
+            authority = authority_map.get(category, category_label)
+            
             references.append({
-                "authority": meta.get('authority', 'Unknown'),
-                "document": meta.get('document', 'Unknown'),
-                "section": meta.get('section', ''),
+                "authority": authority,
+                "document": meta.get('file_name', 'Unknown'),
+                "section": f"Chunk {meta.get('chunk_index', 0) + 1}/{meta.get('total_chunks', 1)}",
                 "relevance": round(relevance, 2),
-                "criticality": meta.get('criticality', 'medium')
+                "criticality": "high" if relevance > 0.8 else "medium" if relevance > 0.6 else "low"
             })
         
         # Ordenar por relevancia
@@ -286,17 +334,20 @@ What are the regulatory requirements and compliance criteria?
         else:
             return "red"
     
-    def _generate_insights(self, rag_results: Dict) -> str:
-        """Genera insights en lenguaje natural"""
+    def _generate_insights(self, rag_results: Dict, territory: str = None) -> str:
+        """Genera insights en lenguaje natural con contexto territorial"""
         confidence = rag_results.get('confidence', 0.75)
         docs_count = len(rag_results.get('documents', []))
         
+        # Contexto territorial
+        territory_context = f" for {territory} jurisdiction" if territory else ""
+        
         if confidence > 0.8:
-            return f"High confidence analysis based on {docs_count} regulatory references. Task execution aligns well with international aviation standards (EASA, FAA, ICAO)."
+            return f"High confidence analysis{territory_context} based on {docs_count} regulatory references. Task execution aligns well with international aviation standards (EASA, FAA, ICAO)."
         elif confidence > 0.6:
-            return f"Moderate confidence analysis based on {docs_count} regulatory references. Some aspects require closer review against specific regulatory requirements."
+            return f"Moderate confidence analysis{territory_context} based on {docs_count} regulatory references. Some aspects require closer review against specific regulatory requirements."
         else:
-            return f"Low confidence analysis. Limited regulatory references found ({docs_count}). Manual review recommended."
+            return f"Low confidence analysis{territory_context}. Limited regulatory references found ({docs_count}). Manual review recommended."
 
 
 class AuditAnalysisOrchestrator:
