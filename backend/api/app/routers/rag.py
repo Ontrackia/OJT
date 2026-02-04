@@ -183,3 +183,135 @@ async def search_rag(query: str, n_results: int = 5, language: str = None):
         "results_count": len(results),
         "results": results
     }
+
+@router.get("/coverage")
+async def get_global_coverage():
+    """
+    Obtiene cobertura normativa global para el mapa
+    
+    Returns:
+        Coverage data por región
+    """
+    coverage = {}
+    
+    # Analizar archivos markdown en world_regs
+    world_regs_dir = Path("./docs/knowledge_item/world_regs")
+    
+    if world_regs_dir.exists():
+        for md_file in world_regs_dir.glob("*.md"):
+            # Extraer metadata
+            with open(md_file, 'r', encoding='utf-8') as f:
+                lines = f.readlines()[:20]
+            
+            authority = None
+            document_code = None
+            language = 'en'
+            update_date = '2026-02-04'
+            
+            for line in lines:
+                if '**Autoridad:**' in line or '**Authority:**' in line:
+                    authority = line.split('**')[2].strip()
+                elif '**Código:**' in line or '**Code:**' in line:
+                    document_code = line.split('**')[2].strip()
+                elif '**Idioma:**' in line or '**Language:**' in line:
+                    language = line.split('**')[2].strip()
+                elif '**Fecha:**' in line or '**Date:**' in line:
+                    update_date = line.split('**')[2].strip()
+            
+            # Determinar región
+            filename = md_file.stem.lower()
+            if 'easa' in filename:
+                region = 'EU'
+            elif 'faa' in filename:
+                region = 'US'
+            elif 'caa' in filename or 'uk' in filename:
+                region = 'GB'
+            elif 'rac' in filename or 'colombia' in filename:
+                region = 'CO'
+            elif 'mexico' in filename or 'dgac' in filename:
+                region = 'MX'
+            else:
+                region = 'ICAO'
+            
+            if region not in coverage:
+                coverage[region] = {
+                    'authority': authority or 'Unknown',
+                    'documents': 0,
+                    'regulations': []
+                }
+            
+            coverage[region]['documents'] += 1
+            coverage[region]['regulations'].append({
+                'document_code': document_code or md_file.stem,
+                'language': language,
+                'update_date': update_date
+            })
+    
+    return {"coverage": coverage}
+
+@router.get("/pending-updates")
+async def get_pending_updates():
+    """
+    Obtiene actualizaciones normativas pendientes de aprobación
+    
+    Returns:
+        Lista de actualizaciones pendientes
+    """
+    import sys
+    sys_path_parent = Path(__file__).parent.parent.parent / 'scripts'
+    sys.path.append(str(sys_path_parent))
+    
+    try:
+        from regulation_watcher import RegulationWatcherService
+        
+        watcher = RegulationWatcherService()
+        pending = watcher.get_pending_updates()
+        
+        return {
+            "updates": [
+                {
+                    "id": u.id,
+                    "authority": u.authority,
+                    "region": u.region,
+                    "document_code": u.document_code,
+                    "detected_at": u.detected_at,
+                    "change_summary": u.change_summary,
+                    "status": u.status
+                }
+                for u in pending
+            ]
+        }
+    except Exception as e:
+        return {"updates": [], "error": str(e)}
+
+@router.post("/approve-update/{update_id}")
+async def approve_regulation_update(update_id: str):
+    """
+    Aprueba una actualización normativa para indexación
+    
+    Args:
+        update_id: ID de la actualización
+    
+    Returns:
+        Confirmación de aprobación
+    """
+    import sys
+    sys_path_parent = Path(__file__).parent.parent.parent / 'scripts'
+    sys.path.append(str(sys_path_parent))
+    
+    try:
+        from regulation_watcher import RegulationWatcherService
+        
+        watcher = RegulationWatcherService()
+        
+        if watcher.approve_update(update_id):
+            return {
+                "status": "approved",
+                "update_id": update_id,
+                "message": "Update approved and ready for indexing"
+            }
+        else:
+            raise HTTPException(status_code=404, detail="Update not found")
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
