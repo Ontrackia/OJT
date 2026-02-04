@@ -91,7 +91,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                             color: 'var(--text-primary)',
                             marginBottom: '2px'
                         }}>
-                            Senior Auditor Coach
+                            Coach Auditor Senior
                         </h3>
                         <p style={{
                             fontSize: '11px',
@@ -99,7 +99,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                             textTransform: 'uppercase',
                             letterSpacing: '0.5px'
                         }}>
-                            {language === 'es' ? 'ANÁLISIS RAG MULTI-AGENTE' : 'MULTI-AGENT RAG ANALYSIS'}
+                            ANÁLISIS RAG MULTI-AGENTE
                         </p>
                     </div>
                 </div>
@@ -125,12 +125,12 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                         {loading ? (
                             <>
                                 <Loader size={20} className="spin" />
-                                {language === 'es' ? 'Analizando...' : 'Analyzing...'}
+                                Analizando...
                             </>
                         ) : (
                             <>
                                 <Play size={20} />
-                                {language === 'es' ? 'Auditar con IA' : 'Audit with AI'}
+                                Auditar con IA
                             </>
                         )}
                     </button>
@@ -166,9 +166,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                     }}>
                         <Brain size={48} color="var(--text-muted)" style={{ marginBottom: '16px', opacity: 0.5 }} />
                         <p>
-                            {language === 'es'
-                                ? 'Haz clic en "Auditar con IA" para analizar esta evidencia con el sistema RAG multi-agente'
-                                : 'Click "Audit with AI" to analyze this evidence with the multi-agent RAG system'}
+                            Haz clic en "Auditar con IA" para analizar esta evidencia con el sistema RAG multi-agente
                         </p>
                     </div>
                 )}
@@ -189,7 +187,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                                 letterSpacing: '0.5px',
                                 marginBottom: '12px'
                             }}>
-                                {language === 'es' ? 'CUMPLIMIENTO NORMATIVO' : 'COMPLIANCE SCORE'}
+                                CUMPLIMIENTO NORMATIVO
                             </div>
                             <ComplianceGauge
                                 score={analysis.compliance_score}
@@ -212,7 +210,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                                     gap: '6px'
                                 }}>
                                     <FileText size={12} />
-                                    {language === 'es' ? 'REFERENCIAS NORMATIVAS' : 'NORMATIVE REFERENCES'}
+                                    REFERENCIAS NORMATIVAS
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                     {analysis.normative_references.slice(0, 5).map((ref, idx) => (
@@ -241,7 +239,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                                     gap: '6px'
                                 }}>
                                     <AlertTriangle size={12} />
-                                    {language === 'es' ? 'DISCREPANCIAS DETECTADAS' : 'DISCREPANCIES DETECTED'}
+                                    DISCREPANCIAS DETECTADAS
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     {analysis.discrepancies.map((disc, idx) => (
@@ -270,7 +268,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                                     gap: '6px'
                                 }}>
                                     <TrendingUp size={12} />
-                                    {language === 'es' ? 'ANÁLISIS RAG' : 'RAG INSIGHTS'}
+                                    ANÁLISIS RAG
                                 </div>
                                 <div style={{
                                     padding: '12px',
@@ -294,7 +292,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                             color: 'var(--text-muted)',
                             textAlign: 'center'
                         }}>
-                            {language === 'es' ? 'Procesado en' : 'Processed in'} {analysis.processing_time_ms}ms
+                            Procesado en {analysis.processing_time_ms}ms
                         </div>
                     </div>
                 )}
@@ -402,7 +400,7 @@ const NormativeReference = ({ reference, language }) => (
                 borderRadius: '10px',
                 color: 'var(--primary)'
             }}>
-                {Math.round(reference.relevance * 100)}% {language === 'es' ? 'relevancia' : 'relevance'}
+                {Math.round(reference.relevance * 100)}% relevancia
             </span>
         </div>
         <div style={{ color: 'var(--text-secondary)' }}>

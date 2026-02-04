@@ -24,7 +24,7 @@ const AuditorDashboard = () => {
     const [aiAnalysis, setAiAnalysis] = useState(null);
 
     useEffect(() => {
-        fetch Evidences();
+        fetchEvidences();
         fetchStats();
     }, [riskFilter]);
 
@@ -118,14 +118,14 @@ const AuditorDashboard = () => {
                         color: 'var(--text-primary)',
                         marginBottom: '8px'
                     }}>
-                        Auditor Dashboard V2.0
+                        Dashboard Auditor V2.0
                     </h1>
                     <p style={{
                         fontSize: '14px',
                         color: 'var(--text-secondary)',
                         marginBottom: '24px'
                     }}>
-                        View and manage all audits with AI-powered analysis
+                        Gestión y análisis de auditorías con IA multi-agente
                     </p>
 
                     {/* Stats Cards */}
@@ -135,7 +135,7 @@ const AuditorDashboard = () => {
                                 <div className="stat-value" style={{ color: 'var(--primary)' }}>
                                     {stats.total_evidences}
                                 </div>
-                                <div className="stat-label">Total Evidences</div>
+                                <div className="stat-label">Evidencias Totales</div>
                             </div>
 
                             <div className="stat-card">
@@ -144,17 +144,17 @@ const AuditorDashboard = () => {
                                 </div>
                                 <div className="stat-label">
                                     <AlertTriangle size={14} style={{ display: 'inline', marginRight: '4px' }} />
-                                    High Risk
+                                    Riesgo Alto
                                 </div>
                             </div>
 
                             <div className="stat-card">
-                                <div className="stat-value" style={{ color: '#856404' }}>
+                                <div className="stat-value" style={{ color: 'var(--warning)' }}>
                                     {stats.risk_distribution?.yellow || 0}
                                 </div>
                                 <div className="stat-label">
                                     <AlertCircle size={14} style={{ display: 'inline', marginRight: '4px' }} />
-                                    Medium Risk
+                                    Riesgo Medio
                                 </div>
                             </div>
 
@@ -164,7 +164,7 @@ const AuditorDashboard = () => {
                                 </div>
                                 <div className="stat-label">
                                     <CheckCircle size={14} style={{ display: 'inline', marginRight: '4px' }} />
-                                    Compliant
+                                    Cumplimiento OK
                                 </div>
                             </div>
                         </div>
@@ -186,7 +186,7 @@ const AuditorDashboard = () => {
                                 fontWeight: 600,
                                 color: 'var(--text-primary)'
                             }}>
-                                Filter by Risk Level:
+                                Filtrar por Nivel de Riesgo:
                             </span>
 
                             <div style={{ display: 'flex', gap: '8px', flex: 1 }}>
@@ -194,28 +194,28 @@ const AuditorDashboard = () => {
                                     onClick={() => setRiskFilter('all')}
                                     className={riskFilter === 'all' ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm'}
                                 >
-                                    All ({stats?.total_evidences || 0})
+                                    Todos ({stats?.total_evidences || 0})
                                 </button>
                                 <button
                                     onClick={() => setRiskFilter('red')}
                                     className={riskFilter === 'red' ? 'btn btn-sm' : 'btn btn-outline btn-sm'}
                                     style={riskFilter === 'red' ? { background: 'var(--danger)', color: 'white' } : {}}
                                 >
-                                    Red ({stats?.risk_distribution?.red || 0})
+                                    Rojo ({stats?.risk_distribution?.red || 0})
                                 </button>
                                 <button
                                     onClick={() => setRiskFilter('yellow')}
-                                    className={riskfilter === 'yellow' ? 'btn btn-sm' : 'btn btn-outline btn-sm'}
+                                    className={riskFilter === 'yellow' ? 'btn btn-sm' : 'btn btn-outline btn-sm'}
                                     style={riskFilter === 'yellow' ? { background: 'var(--warning)', color: 'white' } : {}}
                                 >
-                                    Yellow ({stats?.risk_distribution?.yellow || 0})
+                                    Amarillo ({stats?.risk_distribution?.yellow || 0})
                                 </button>
                                 <button
                                     onClick={() => setRiskFilter('green')}
                                     className={riskFilter === 'green' ? 'btn btn-sm' : 'btn btn-outline btn-sm'}
                                     style={riskFilter === 'green' ? { background: 'var(--success)', color: 'white' } : {}}
                                 >
-                                    Green ({stats?.risk_distribution?.green || 0})
+                                    Verde ({stats?.risk_distribution?.green || 0})
                                 </button>
                             </div>
                         </div>
@@ -230,14 +230,14 @@ const AuditorDashboard = () => {
                         color: 'var(--text-secondary)'
                     }}>
                         <div className="spinner" style={{ margin: '0 auto' }}></div>
-                        <p style={{ marginTop: '16px' }}>Loading evidences...</p>
+                        <p style={{ marginTop: '16px' }}>Cargando evidencias...</p>
                     </div>
                 ) : evidences.length === 0 ? (
                     <div className="card">
                         <div className="card-body" style={{ textAlign: 'center', padding: '80px' }}>
                             <Search size={48} color="var(--text-muted)" style={{ marginBottom: '16px' }} />
                             <p style={{ color: 'var(--text-secondary)' }}>
-                                No evidences found with selected filters
+                                No se encontraron evidencias con los filtros seleccionados
                             </p>
                         </div>
                     </div>
