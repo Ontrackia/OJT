@@ -18,6 +18,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Camera, MapPin, Clock, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { useLanguage } from './LanguageSelector';
 import { useGeolocation } from '../hooks/useGeolocation';
+import imageCompression from 'browser-image-compression';
 
 const VisualScanCapture = ({
     taskId,
@@ -31,6 +32,7 @@ const VisualScanCapture = ({
     const [capturedPhoto, setCapturedPhoto] = useState(null);
     const [photoMetadata, setPhotoMetadata] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [compressing, setCompressing] = useState(false);
     const [validationError, setValidationError] = useState('');
 
     const fileInputRef = useRef(null);
@@ -108,58 +110,89 @@ const VisualScanCapture = ({
 
     const processPhoto = async (photoBlob) => {
         setValidationError('');
+        setCompressing(true);
 
-        // Validar GPS
-        if (!latitude || !longitude) {
-            setValidationError(
-                language === 'es'
-                    ? 'GPS no disponible. Activa la ubicación para continuar.'
-                    : 'GPS not available. Enable location to continue.'
-            );
-            return;
-        }
+        try {
+            // Configuración de compresión
+            const compressionOptions = {
+                maxSizeMB: 0.5,          // Máximo 500KB
+                maxWidthOrHeight: 1920,  // 1920px lado largo
+                useWebWorker: true,
+                fileType: 'image/jpeg',
+                initialQuality: 0.7      // JPEG quality 0.7
+            };
 
-        if (gpsError) {
-            setValidationError(
-                language === 'es'
-                    ? `Error de GPS: ${gpsError}`
-                    : `GPS Error: ${gpsError}`
-            );
-            return;
-        }
+            // Comprimir imagen
+            const compressedBlob = await imageCompression(photoBlob, compressionOptions);
 
-        // Crear metadata forense
-        const now = new Date();
-        const metadata = {
-            task_id: taskId,
-            capture_timestamp: now.toISOString(),
-            capture_timestamp_unix: now.getTime(),
-            gps_latitude: latitude,
-            gps_longitude: longitude,
-            gps_accuracy: accuracy,
-            device_info: {
-                user_agent: navigator.userAgent,
-                platform: navigator.platform,
-                language: navigator.language
+            console.log(`Original: ${(photoBlob.size / 1024 / 1024).toFixed(2)}MB`);
+            console.log(`Compressed: ${(compressedBlob.size / 1024).toFixed(2)}KB`);
+
+            setCompressing(false);
+
+            // Validar GPS
+            if (!latitude || !longitude) {
+                setValidationError(
+                    language === 'es'
+                        ? 'GPS no disponible. Activa la ubicación para continuar.'
+                        : 'GPS not available. Enable location to continue.'
+                );
+                return;
             }
-        };
 
-        // Calcular hash de la foto
-        const arrayBuffer = await photoBlob.arrayBuffer();
-        const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            if (gpsError) {
+                setValidationError(
+                    language === 'es'
+                        ? `Error de GPS: ${gpsError}`
+                        : `GPS Error: ${gpsError}`
+                );
+                return;
+            }
 
-        metadata.photo_hash = hashHex;
+            // Crear metadata forense
+            const now = new Date();
+            const metadata = {
+                task_id: taskId,
+                capture_timestamp: now.toISOString(),
+                capture_timestamp_unix: now.getTime(),
+                gps_latitude: latitude,
+                gps_longitude: longitude,
+                gps_accuracy: accuracy,
+                device_info: {
+                    user_agent: navigator.userAgent,
+                    platform: navigator.platform,
+                    language: navigator.language
+                }
+            };
 
-        // Crear URL de preview
-        const photoUrl = URL.createObjectURL(photoBlob);
+            // Calcular hash de la foto COMPRIMIDA
+            const arrayBuffer = await compressedBlob.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-        setCapturedPhoto(photoUrl);
-        setPhotoMetadata({
-            blob: photoBlob,
-            metadata: metadata
-        });
+            metadata.photo_hash = hashHex;
+            metadata.original_size = photoBlob.size;
+            metadata.compressed_size = compressedBlob.size;
+            metadata.compression_ratio = ((photoBlob.size - compressedBlob.size) / photoBlob.size * 100).toFixed(2);
+
+            // Crear URL de preview
+            const photoUrl = URL.createObjectURL(compressedBlob);
+
+            setCapturedPhoto(photoUrl);
+            setPhotoMetadata({
+                blob: compressedBlob,
+                metadata: metadata
+            });
+        } catch (error) {
+            console.error('Compression error:', error);
+            setValidationError(
+                language === 'es'
+                    ? 'Error al comprimir la imagen'
+                    : 'Error compressing image'
+            );
+            setCompressing(false);
+        }
     };
 
     const validateAndUpload = async () => {
