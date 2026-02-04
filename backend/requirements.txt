@@ -13,29 +13,47 @@ pydantic-settings==2.1.0
 
 # ==========================================
 # BASE DE DATOS
-# ==========================================
-sqlalchemy==2.0.25
-alembic==1.13.1
+# ====================================# === DATABASE ===
+sqlalchemy==2.0.31
 psycopg2-binary==2.9.9
-pymongo==4.6.1
-motor==3.3.2
+alembic==1.13.1
 
-# ==========================================
-# AUTENTICACIÓN Y SEGURIDAD
-# ==========================================
+# === WEB FRAMEWORK ===
+fastapi==0.112.0
+uvicorn[standard]==0.30.3
+python-multipart==0.0.9
+pydantic==2.7.4
+pydantic-settings==2.3.3
+
+# === AUTHENTICATION ===
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 bcrypt==4.1.2
-python-multipart==0.0.9
-cryptography==42.0.2
 
-# ==========================================
+# === AI & ML ===
+openai==1.30.5
+mistralai==0.1.8
+
+# === RAG & EMBEDDINGS ===
+PyMuPDF==1.24.1
+chromadb==0.4.22
+sentence-transformers==2.5.1
+
+# === FORENSIC & SECURITY ===
+cryptography==42.0.8
+
+# === PDF PROCESSING ===
+reportlab==4.1.0
+PyPDF2==3.0.1
+
+# === UTILITIES ===
+python-dotenv==1.0.1
+requests==2.32.3======================
 # AI/ML - MISTRAL INTEGRATION
 # ==========================================
 anthropic==0.18.1
 mistralai==0.1.4
 openai==1.12.0
-httpx==0.26.0
 
 # ==========================================
 # FORENSIC INTEGRITY
