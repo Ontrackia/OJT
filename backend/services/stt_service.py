@@ -150,14 +150,14 @@ class STTService:
     
     def _analyze_text(self, text: str, language: str) -> Dict:
         """
-        Analiza el texto buscando palabras clave de discrepancia
+        Analiza el texto buscando palabras clave de discrepancia y territorio
         
         Args:
             text: Texto transcrito
             language: Idioma
         
         Returns:
-            Dict con análisis
+            Dict con análisis incluyendo territorio detectado
         """
         text_lower = text.lower()
         keywords = self.DISCREPANCY_KEYWORDS.get(language, [])
@@ -176,12 +176,85 @@ class STTService:
         else:
             criticality = 'low'
         
+        # Detectar territorio mencionado en el audio
+        territory = self._detect_territory(text_lower, language)
+        
         return {
             'discrepancies_found': found_keywords,
             'discrepancy_count': len(found_keywords),
             'criticality': criticality,
-            'requires_review': len(found_keywords) > 0
+            'requires_review': len(found_keywords) > 0,
+            'territory': territory  # 🌍 CIELOS ABIERTOS
         }
+    
+    def _detect_territory(self, text: str, language: str) -> Optional[str]:
+        """
+        Detecta territorio/país mencionado en el reporte de voz
+        
+        Args:
+            text: Texto en minúsculas
+            language: Idioma
+        
+        Returns:
+            Código de territorio o None
+        """
+        # Mapeo de menciones a códigos territoriales
+        territory_keywords = {
+            'brasil': 'BRAZIL',
+            'brazil': 'BRAZIL',
+            'anac': 'BRAZIL',
+            'rbac': 'BRAZIL',
+            
+            'canadá': 'CANADA',
+            'canada': 'CANADA',
+            'tcca': 'CANADA',
+            'transport canada': 'CANADA',
+            
+            'australia': 'AUSTRALIA',
+            'casa': 'AUSTRALIA',
+            
+            'chile': 'CHILE',
+            'dgac chile': 'CHILE',
+            
+            'méxico': 'MEXICO',
+            'mexico': 'MEXICO',
+            'afac': 'MEXICO',
+            
+            'costa rica': 'COSTA_RICA',
+            'ecuador': 'ECUADOR',
+            
+            'china': 'CHINA',
+            'caac': 'CHINA',
+            
+            'qatar': 'QATAR',
+            'qcaa': 'QATAR',
+            
+            'sudáfrica': 'SOUTH_AFRICA',
+            'south africa': 'SOUTH_AFRICA',
+            'sacaa': 'SOUTH_AFRICA',
+            
+            'kenia': 'KENYA',
+            'kenya': 'KENYA',
+            'kcaa': 'KENYA',
+            
+            'suiza': 'SWITZERLAND',
+            'switzerland': 'SWITZERLAND',
+            'foca': 'SWITZERLAND',
+            
+            'malta': 'MALTA',
+            
+            'reino unido': 'UK',
+            'united kingdom': 'UK',
+            'uk caa': 'UK',
+            'cap': 'UK'  # Civil Aviation Publication
+        }
+        
+        # Buscar menciones
+        for keyword, territory_code in territory_keywords.items():
+            if keyword in text:
+                return territory_code
+        
+        return None  # Sin territorio específico = GLOBAL
     
     def stream_transcribe(self, microphone_index: Optional[int] = None) -> Dict:
         """
