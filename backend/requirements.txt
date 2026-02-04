@@ -1,11 +1,112 @@
+# ============================================
+# ONTRACKIA OJT V2.0 - BACKEND DEPENDENCIES
+# Protocolo Búnker: Versiones fijadas para seguridad
+# ============================================
+
+# ==========================================
+# CORE FRAMEWORK
+# ==========================================
 fastapi==0.109.2
 uvicorn[standard]==0.27.1
-sqlalchemy==2.0.25
 pydantic==2.6.1
-python-multipart==0.0.9
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
+pydantic-settings==2.1.0
+
+# ==========================================
+# BASE DE DATOS
+# ==========================================
+sqlalchemy==2.0.25
+alembic==1.13.1
+psycopg2-binary==2.9.9
 pymongo==4.6.1
 motor==3.3.2
+
+# ==========================================
+# AUTENTICACIÓN Y SEGURIDAD
+# ==========================================
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+python-multipart==0.0.9
+cryptography==42.0.2
+
+# ==========================================
+# AI/ML - MISTRAL INTEGRATION
+# ==========================================
+anthropic==0.18.1
+mistralai==0.1.4
+openai==1.12.0
+httpx==0.26.0
+
+# ==========================================
+# FORENSIC INTEGRITY
+# SHA-256 para sellado de evidencias
+# ==========================================
+hashlib  # Built-in
+# No requiere instalación adicional
+
+# ==========================================
+# UTILITIES
+# ==========================================
 python-dotenv==1.0.1
+python-dateutil==2.8.2
 pyyaml==6.0.1
+requests==2.31.0
+
+# ==========================================
+# ASYNC & WORKERS
+# ==========================================
+celery==5.3.6
+redis==5.0.1
+
+# ==========================================
+# PDF & DOCUMENTS
+# ==========================================
+pypdf==4.0.1
+reportlab==4.1.0
+python-docx==1.1.0
+Pillow==10.2.0
+
+# ==========================================
+# DATA PROCESSING
+# ==========================================
+pandas==2.2.0
+openpyxl==3.1.2
+
+# ==========================================
+# MONITORING & LOGGING
+# ==========================================
+sentry-sdk[fastapi]==1.40.4
+python-json-logger==2.0.7
+prometheus-client==0.19.0
+prometheus-fastapi-instrumentator==6.1.0
+
+# ==========================================
+# TESTING (Development only)
+# ==========================================
+pytest==8.0.0
+pytest-asyncio==0.23.4
+pytest-cov==4.1.0
+httpx==0.26.0  # Para testing async
+faker==22.6.0
+
+# ==========================================
+# CODE QUALITY (Development only)
+# ==========================================
+black==24.1.1
+flake8==7.0.0
+isort==5.13.2
+mypy==1.8.0
+
+# ==========================================
+# SECURITY AUDIT
+# ==========================================
+safety==3.0.1
+bandit==1.7.6
+
+# ==========================================
+# NOTAS DE PRODUCCIÓN
+# ==========================================
+# - Ejecutar: pip install -r requirements.txt
+# - Congelar versiones: pip freeze > requirements.lock
+# - Auditar seguridad: safety check
+# - Verificar vulnerabilidades: bandit -r .

@@ -1,48 +1,224 @@
 version: '3.8'
 
+# ============================================
+# ONTRACKIA OJT V2.0 - DOCKER COMPOSE
+# Protocolo Búnker: Infraestructura Forense
+# ============================================
+
 services:
+  # ==========================================
+  # POSTGRESQL - Base de Datos Principal
+  # Tablas OJT con integridad referencial
+  # ==========================================
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
+    container_name: ojt_postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: ontrackia_ojt
-      POSTGRES_USER: ontrackia
-      POSTGRES_PASSWORD: ontrackia_password
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: ${POSTGRES_DB:-ontrackia_ojt_db}
+      POSTGRES_USER: ${POSTGRES_USER:-ontrackia_ojt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-CAMBIAR_EN_PRODUCCION}
+      # Configuración de seguridad
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=es_ES.UTF-8 --lc-ctype=es_ES.UTF-8"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  mongodb:
-    image: mongo:7
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
-      - "27017:27017"
+      - "5432:5432"
+    networks:
+      - ojt_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ontrackia_ojt}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # MONGODB - Persistencia de Evidencias
+  # Sellado SHA-256 para forensic integrity
+  # ==========================================
+  mongodb:
+    image: mongo:7-jammy
+    container_name: ojt_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER:-ontrackia_evidences}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-CAMBIAR_PASSWORD_MONGO}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-ojt_evidences}
     volumes:
       - mongo_data:/data/db
-
-  backend:
-    build: ./backend
+      - mongo_config:/data/configdb
+      - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     ports:
-      - "8000:8000"
+      - "27017:27017"
+    networks:
+      - ojt_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # BACKEND - FastAPI con Forensic Sealing
+  # API con validación AI Senior Auditor
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ojt_backend
+    restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      - DATABASE_URL=postgresql://ontrackia:ontrackia_password@postgres:5432/ontrackia_ojt
-      - MONGODB_URI=mongodb://mongodb:27017/ontrackia_evidences
-    depends_on:
-      - postgres
-      - mongodb
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-ontrackia_ojt}:${POSTGRES_PASSWORD:-CAMBIAR_EN_PRODUCCION}@postgres:5432/${POSTGRES_DB:-ontrackia_ojt_db}
+      - MONGODB_URI=mongodb://${MONGODB_USER:-ontrackia_evidences}:${MONGODB_PASSWORD:-CAMBIAR_PASSWORD_MONGO}@mongodb:27017/${MONGODB_DATABASE:-ojt_evidences}
+      - PYTHONUNBUFFERED=1
     volumes:
       - ./backend:/app
-
-  frontend:
-    build: ./frontend
+      - upload_data:/app/uploads
+      - ./logs:/app/logs
     ports:
-      - "5173:5173"
-    environment:
-      - VITE_API_URL=http://localhost:8000
+      - "${API_PORT:-8000}:8000"
     depends_on:
-      - backend
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ojt_network
+    command: >
+      sh -c "
+        echo '🔐 Iniciando Backend con Protocolo Búnker...' &&
+        python -m alembic upgrade head &&
+        python verify_ai.py --check-governance &&
+        uvicorn api.app.main:app --host 0.0.0.0 --port 8000 --workers ${API_WORKERS:-4}
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==========================================
+  # FRONTEND - Vite PWA Offline-First
+  # Branding Morado Oscuro (#0a051a + #7c3aed)
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+        - VITE_THEME_PRIMARY=${THEME_PRIMARY_COLOR:-#7c3aed}
+        - VITE_THEME_BACKGROUND=${THEME_BACKGROUND_DEEP:-#0a051a}
+    container_name: ojt_frontend
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+      - VITE_PWA_ENABLED=${PWA_ENABLED:-true}
     volumes:
       - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - ojt_network
+    command: npm run dev -- --host 0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # ==========================================
+  # REDIS (Opcional) - Cache y Rate Limiting
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: ojt_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - ojt_network
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-CAMBIAR_REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+# ==========================================
+# NETWORKS
+# ==========================================
+networks:
+  ojt_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# ==========================================
+# VOLUMES - PERSISTENCIA FORENSE
+# Crítico: No perder datos de auditoría
+# ==========================================
 volumes:
   postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/postgres
+  
   mongo_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/mongo
+  
+  mongo_config:
+    driver: local
+  
+  upload_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/uploads
+  
+  redis_data:
+    driver: local
+
+# ==========================================
+# COMANDOS ÚTILES
+# ==========================================
+# Levantar servicios:
+#   docker-compose up -d
+#
+# Ver logs en tiempo real:
+#   docker-compose logs -f backend
+#
+# Ejecutar migraciones:
+#   docker-compose exec backend alembic upgrade head
+#
+# Verificar AI Governance:
+#   docker-compose exec backend python verify_ai.py --full-check
+#
+# Backup de PostgreSQL:
+#   docker-compose exec postgres pg_dump -U ontrackia_ojt ontrackia_ojt_db > backup.sql
+#
+# Backup de MongoDB:
+#   docker-compose exec mongodb mongodump --out /data/backup
+#
+# Detener servicios:
+#   docker-compose down
+#
+# Detener y eliminar volúmenes (⚠️ PELIGRO):
+#   docker-compose down -v
