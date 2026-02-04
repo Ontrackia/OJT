@@ -60,7 +60,7 @@ nano .env
 
 ```bash
 DATABASE_URL=postgresql://ontrackia_ojt:YOUR_PASSWORD@localhost:5432/ontrackia_ojt_db
-MISTRAL_API_KEY=c3ko2dPmh4XTPSEZAz058KsS8W22RXMH
+MISTRAL_API_KEY=your_mistral_api_key_here
 CHROMADB_PATH=/var/www/ontrackia_ojt/backend/data/chromadb
 JWT_SECRET_KEY=GENERATE_RANDOM_SECRET_HERE
 ENVIRONMENT=production
