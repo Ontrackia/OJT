@@ -21,11 +21,17 @@ class OJTPerson(Base):
     start_date = Column(Date, nullable=True)
     supervisor_id = Column(Integer, nullable=True)  # user_id of supervisor
     
+    # Control Jerárquico (V2.0)
+    plan_type = Column(String(20), default='individual')  # 'individual' or 'corporate'
+    target_compliance_percentage = Column(Integer, default=70)  # Threshold de cumplimiento
+    # Si plan_type='individual': el usuario puede ajustar este valor
+    # Si plan_type='corporate': solo company_admin puede ajustar
+    
     status = Column(String(20), default='active')  # active, inactive
     created_at = Column(DateTime, default=datetime.utcnow)
     
     def __repr__(self):
-        return f"<OJTPerson {self.full_name}>"
+        return f"<OJTPerson {self.full_name} ({self.plan_type})>"
 
 class OJTTask(Base):
     __tablename__ = "ojt_tasks"
@@ -33,42 +39,47 @@ class OJTTask(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     tenant_id = Column(Integer, nullable=False, index=True)
     
-    task_code = Column(String(50), nullable=False)
-    task_title = Column(String(255), nullable=False)
-    task_description = Column(Text, nullable=True)
-    task_category = Column(String(100), nullable=True)  # Mechanical, Avionics, etc.
-    normative_reference = Column(Text, nullable=True)
+    task_code = Column(String(100), nullable=False, unique=True)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    ata_chapter = Column(String(10), nullable=True)  # ATA 100 system
     
-    requires_evidence = Column(Boolean, default=True)
-    ai_generated_description = Column(Boolean, default=False)
+    required_hours = Column(Integer, default=0)
+    category = Column(String(50), nullable=True)  # B1, B2, C
+    
+    # Protocolo de Entrevista Crítica (V2.0)
+    is_critical = Column(Boolean, default=False)  # Si requiere entrevista antes de validar
     
     created_by = Column(Integer, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     def __repr__(self):
-        return f"<OJTTask {self.task_code} - {self.task_title}>"
+        return f"<OJTTask {self.task_code} {'[CRÍTICA]' if self.is_critical else ''}>"
 
 class OJTPersonTask(Base):
     __tablename__ = "ojt_person_tasks"
     
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     tenant_id = Column(Integer, nullable=False, index=True)
+    
     person_id = Column(String, ForeignKey('ojt_persons.id'), nullable=False)
     task_id = Column(String, ForeignKey('ojt_tasks.id'), nullable=False)
     
-    assigned_date = Column(Date, nullable=False, default=date.today)
-    target_completion_date = Column(Date, nullable=True)
-    actual_completion_date = Column(Date, nullable=True)
+    assigned_date = Column(DateTime, default=datetime.utcnow)
+    completed_date = Column(DateTime, nullable=True)
     
     status = Column(String(20), default='assigned')  # assigned, in_progress, completed, validated
-    supervisor_validated = Column(Boolean, default=False)
     validated_by = Column(Integer, nullable=True)  # supervisor user_id
+    validated_at = Column(DateTime, nullable=True)
     
     # External validator info / Snapshot
     validator_name = Column(String(255), nullable=True)
     validator_email = Column(String(255), nullable=True)
     
-    validated_at = Column(DateTime, nullable=True)
+    # Auditoría de Entrevista Crítica (V2.0)
+    audit_log = Column(Text, nullable=True)  # JSON con respuestas de entrevista + SHA-256 seal
+    interview_completed = Column(Boolean, default=False)  # Flag de entrevista completada
+    interview_token = Column(String(64), nullable=True)  # Token SHA-256 de entrevista
     
     notes = Column(Text, nullable=True)
     
