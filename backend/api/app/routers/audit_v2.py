@@ -120,6 +120,7 @@ async def get_evidences(
 async def analyze_evidence(
     evidence_id: str,
     task_description: str,
+    territory: Optional[str] = None,
     context: dict = None
 ):
     """
@@ -129,6 +130,7 @@ async def analyze_evidence(
         {
             "evidence_id": "visual_scan_1738665015",
             "task_description": "Engine Run - CFM56-7B",
+            "territory": "BRAZIL" | "CANADA" | "GLOBAL" | null,
             "context": {
                 "aircraft_type": "B737-800",
                 "component": "CFM56-7B Engine",
@@ -178,18 +180,20 @@ async def analyze_evidence(
         # Obtener orquestador multi-agente
         orchestrator = get_orchestrator()
         
-        # Ejecutar análisis
+        # Ejecutar análisis (con filtro territorial)
         analysis = orchestrator.analyze_evidence(
             evidence_id=evidence_id,
             task_description=task_description,
-            context=enriched_context
+            context=enriched_context,
+            territory=territory  # Filtro territorial para RAG
         )
         
         # Actualizar metadata con resultado del análisis
         existing_metadata['last_analysis'] = {
             "timestamp": analysis['timestamp'],
             "compliance_score": analysis['compliance_score'],
-            "risk_level": analysis['risk_level']
+            "risk_level": analysis['risk_level'],
+            "territory": territory or "GLOBAL"
         }
         
         # Guardar metadata actualizada

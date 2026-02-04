@@ -398,7 +398,8 @@ class AuditAnalysisOrchestrator:
         self,
         evidence_id: str,
         task_description: str,
-        context: Dict
+        context: Dict,
+        territory: str = None
     ) -> Dict:
         """
         Analiza evidencia usando todos los agentes activos
@@ -407,16 +408,18 @@ class AuditAnalysisOrchestrator:
             evidence_id: ID de la evidencia visual
             task_description: Descripción de la tarea
             context: Contexto adicional
+            territory: Filtro territorial (CANADA, BRAZIL, etc.)
         
         Returns:
             Análisis consolidado de todos los agentes
         """
         start_time = datetime.now()
         
-        # Ejecutar análisis de Senior Auditor Coach
+        # Ejecutar análisis de Senior Auditor Coach (con territorio)
         senior_analysis = self.agents["senior_auditor"].analyze(
             task_description,
-            context
+            context,
+            territory=territory
         )
         
         # Consolidar resultados (por ahora solo 1 agente)
@@ -430,6 +433,7 @@ class AuditAnalysisOrchestrator:
             "normative_references": senior_analysis["normative_references"],
             "discrepancies": senior_analysis["discrepancies"],
             "rag_insights": senior_analysis["rag_insights"],
+            "territory": senior_analysis.get("territory", "GLOBAL"),
             "agent_details": {
                 "senior_auditor": senior_analysis
             },

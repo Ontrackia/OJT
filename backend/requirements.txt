@@ -1,29 +1,19 @@
 # ============================================
 # ONTRACKIA OJT V2.0 - BACKEND DEPENDENCIES
-# Protocolo Búnker: Versiones fijadas para seguridad
+# Protocolo Búnker + Cerebro Tridente
 # ============================================
 
-# ==========================================
-# CORE FRAMEWORK
-# ==========================================
-fastapi==0.109.2
-uvicorn[standard]==0.27.1
-pydantic==2.6.1
-pydantic-settings==2.1.0
-
-# ==========================================
-# BASE DE DATOS
-# ====================================# === DATABASE ===
-sqlalchemy==2.0.31
-psycopg2-binary==2.9.9
-alembic==1.13.1
-
-# === WEB FRAMEWORK ===
+# === CORE FRAMEWORK ===
 fastapi==0.112.0
 uvicorn[standard]==0.30.3
 python-multipart==0.0.9
 pydantic==2.7.4
 pydantic-settings==2.3.3
+
+# === DATABASE ===
+sqlalchemy==2.0.31
+psycopg2-binary==2.9.9
+alembic==1.13.1
 
 # === AUTHENTICATION ===
 python-jose[cryptography]==3.3.0
@@ -33,101 +23,71 @@ bcrypt==4.1.2
 # === AI & ML ===
 openai==1.30.5
 mistralai==0.1.8
+anthropic==0.18.1
 
-# === RAG & EMBEDDINGS ===
-PyMuPDF==1.24.1
+# === RAG & EMBEDDINGS (CEREBRO TRIDENTE) ===
 chromadb==0.4.22
 sentence-transformers==2.5.1
+tqdm==4.66.1  # Progress bars para indexación
+
+# === WEB SCRAPING (CIELOS ABIERTOS) ===
+beautifulsoup4==4.12.3
+lxml==5.1.0
+
+# === PDF PROCESSING ===
+PyMuPDF==1.24.1
+PyPDF2==3.0.1
+pdfplumber==0.10.3  # Para crawler regulatorio
+reportlab==4.1.0
+
+# === IMAGE PROCESSING ===
+Pillow==10.2.0
 
 # === FORENSIC & SECURITY ===
 cryptography==42.0.8
 
-# === PDF PROCESSING ===
-reportlab==4.1.0
-PyPDF2==3.0.1
-
 # === UTILITIES ===
-python-dotenv==1.0.1
-requests==2.32.3
-aiohttp==3.9.3
-beautifulsoup4==4.12.3
-Pillow==10.2.0======================
-# AI/ML - MISTRAL INTEGRATION
-# ==========================================
-anthropic==0.18.1
-mistralai==0.1.4
-openai==1.12.0
-
-# ==========================================
-# FORENSIC INTEGRITY
-# SHA-256 para sellado de evidencias
-# ==========================================
-hashlib  # Built-in
-# No requiere instalación adicional
-
-# ==========================================
-# UTILITIES
-# ==========================================
 python-dotenv==1.0.1
 python-dateutil==2.8.2
 pyyaml==6.0.1
-requests==2.31.0
+requests==2.32.3
+aiohttp==3.9.3
 
-# ==========================================
-# ASYNC & WORKERS
-# ==========================================
+# === ASYNC & WORKERS ===
 celery==5.3.6
 redis==5.0.1
 
-# ==========================================
-# PDF & DOCUMENTS
-# ==========================================
-pypdf==4.0.1
-reportlab==4.1.0
-python-docx==1.1.0
-Pillow==10.2.0
-
-# ==========================================
-# DATA PROCESSING
-# ==========================================
+# === DATA PROCESSING ===
 pandas==2.2.0
 openpyxl==3.1.2
+python-docx==1.1.0
 
-# ==========================================
-# MONITORING & LOGGING
-# ==========================================
+# === MONITORING & LOGGING ===
 sentry-sdk[fastapi]==1.40.4
 python-json-logger==2.0.7
 prometheus-client==0.19.0
 prometheus-fastapi-instrumentator==6.1.0
 
-# ==========================================
-# TESTING (Development only)
-# ==========================================
+# === TESTING (Development) ===
 pytest==8.0.0
 pytest-asyncio==0.23.4
 pytest-cov==4.1.0
-httpx==0.26.0  # Para testing async
+httpx==0.26.0
 faker==22.6.0
 
-# ==========================================
-# CODE QUALITY (Development only)
-# ==========================================
+# === CODE QUALITY (Development) ===
 black==24.1.1
 flake8==7.0.0
 isort==5.13.2
 mypy==1.8.0
 
-# ==========================================
-# SECURITY AUDIT
-# ==========================================
+# === SECURITY AUDIT ===
 safety==3.0.1
 bandit==1.7.6
 
-# ==========================================
-# NOTAS DE PRODUCCIÓN
-# ==========================================
-# - Ejecutar: pip install -r requirements.txt
-# - Congelar versiones: pip freeze > requirements.lock
-# - Auditar seguridad: safety check
-# - Verificar vulnerabilidades: bandit -r .
+# ===================================
+# DEPLOYMENT NOTES
+# ===================================
+# Install: pip install -r requirements.txt
+# Freeze: pip freeze > requirements.lock
+# Security: safety check && bandit -r .

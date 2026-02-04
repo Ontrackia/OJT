@@ -20,6 +20,26 @@ import { Brain, Play, CheckCircle, AlertTriangle, FileText, TrendingUp, Loader }
 const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [territory, setTerritory] = useState('GLOBAL');
+
+    // Territorios disponibles (Cielos Abiertos)
+    const TERRITORIES = [
+        { value: 'GLOBAL', label: '🌍 Global (Todas las Regulaciones)' },
+        { value: 'AUSTRALIA', label: '🇦🇺 Australia (CASA)' },
+        { value: 'BRAZIL', label: '🇧🇷 Brasil (ANAC)' },
+        { value: 'CANADA', label: '🇨🇦 Canadá (TCCA)' },
+        { value: 'CHILE', label: '🇨🇱 Chile (DGAC)' },
+        { value: 'CHINA', label: '🇨🇳 China (CAAC)' },
+        { value: 'COSTA_RICA', label: '🇨🇷 Costa Rica (DGAC)' },
+        { value: 'ECUADOR', label: '🇪🇨 Ecuador (DGAC)' },
+        { value: 'KENYA', label: '🇰🇪 Kenia (KCAA)' },
+        { value: 'MALTA', label: '🇲🇹 Malta (TM CAD)' },
+        { value: 'MEXICO', label: '🇲🇽 México (AFAC)' },
+        { value: 'QATAR', label: '🇶🇦 Qatar (QCAA)' },
+        { value: 'SOUTH_AFRICA', label: '🇿🇦 Sudáfrica (SACAA)' },
+        { value: 'SWITZERLAND', label: '🇨🇭 Suiza (FOCA)' },
+        { value: 'UK', label: '🇬🇧 Reino Unido (UK CAA)' }
+    ];
 
     const handleAnalyze = async () => {
         setLoading(true);
@@ -34,6 +54,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                 body: JSON.stringify({
                     evidence_id: evidence.id,
                     task_description: evidence.task_id || 'Visual inspection task',
+                    territory: territory !== 'GLOBAL' ? territory : null,  // Filtro territorial
                     context: {
                         aircraft_type: 'Unknown', // TODO: Get from evidence
                         component: 'Component',
@@ -81,7 +102,7 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    marginBottom: '12px'
+                    marginBottom: '16px'
                 }}>
                     <Brain size={24} color="var(--primary)" />
                     <div>
@@ -103,6 +124,44 @@ const SeniorAuditorPanel = ({ evidence, onAnalysisComplete, analysis, language }
                         </p>
                     </div>
                 </div>
+
+                {/* Territory Selector */}
+                {!analysis && (
+                    <div style={{ marginBottom: '12px' }}>
+                        <label style={{
+                            display: 'block',
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            color: 'var(--text-muted)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px',
+                            marginBottom: '8px'
+                        }}>
+                            Territorio / Jurisdicción
+                        </label>
+                        <select
+                            value={territory}
+                            onChange={(e) => setTerritory(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px 12px',
+                                background: 'var(--bg-deep)',
+                                border: '1px solid var(--glass-border)',
+                                borderRadius: '8px',
+                                color: 'var(--text-primary)',
+                                fontSize: '13px',
+                                fontWeight: 500,
+                                cursor: 'pointer'
+                            }}
+                        >
+                            {TERRITORIES.map(t => (
+                                <option key={t.value} value={t.value}>
+                                    {t.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
 
                 {/* Analyze Button */}
                 {!analysis && (
