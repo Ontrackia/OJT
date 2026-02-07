@@ -1,0 +1,21 @@
+[
+    {
+        "id": "OJT-001",
+        "title": "On-the-Job Training (OJT)",
+        "description": "Training conducted at the work site.",
+        "modules": [
+            {
+                "id": "OJT-MOD-001",
+                "title": "Module 1: Safety",
+                "tasks": [
+                    {
+                        "id": "OJT-TASK-001",
+                        "title": "Task 1: Hazard Identification",
+                        "description": "Identify potential hazards in the work area.",
+                        "type": "practical"
+                    }
+                ]
+            }
+        ]
+    }
+]

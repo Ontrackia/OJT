@@ -10,18 +10,21 @@
 
 import { useState, useEffect } from 'react';
 import { AlertTriangle, Shield, Clock, User, ChevronRight, RefreshCw, CheckCircle, Eye } from 'lucide-react';
+import { useLanguage } from './LanguageSelector';
+import './SMSRadarPanel.css';
 
 const SMSRadarPanel = ({ onReportClick }) => {
+    const { language } = useLanguage();
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [lastUpdate, setLastUpdate] = useState(null);
 
     const fetchReports = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/v2/sms/reports');
+            const response = await fetch('/api/v2/sms/reports');
             if (response.ok) {
                 const data = await response.json();
-                setReports(data);
+                setReports(data.reports || []);  // Extract reports array from response
                 setLastUpdate(new Date().toLocaleTimeString());
             }
         } catch (error) {
@@ -51,11 +54,11 @@ const SMSRadarPanel = ({ onReportClick }) => {
     const getStatusBadge = (status) => {
         switch (status) {
             case 'OPEN':
-                return { label: 'ABIERTO', color: '#ef4444', icon: AlertTriangle };
+                return { label: language === 'es' ? 'ABIERTO' : 'OPEN', color: '#ef4444', icon: AlertTriangle };
             case 'REVIEWING':
-                return { label: 'EN REVISIÓN', color: '#f59e0b', icon: Eye };
+                return { label: language === 'es' ? 'EN REVISIÓN' : 'REVIEWING', color: '#f59e0b', icon: Eye };
             case 'CLOSED':
-                return { label: 'CERRADO', color: '#10b981', icon: CheckCircle };
+                return { label: language === 'es' ? 'CERRADO' : 'CLOSED', color: '#10b981', icon: CheckCircle };
             default:
                 return { label: status, color: 'var(--text-muted)', icon: Clock };
         }
@@ -73,41 +76,17 @@ const SMSRadarPanel = ({ onReportClick }) => {
     const openReports = reports.filter(r => r.status === 'OPEN');
 
     return (
-        <div className="glass-card" style={{
-            padding: '0',
-            borderRadius: 'var(--radius-sm)',
-            overflow: 'hidden'
-        }}>
+        <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
             {/* Header */}
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '16px 20px',
-                borderBottom: '1px solid var(--glass-border)',
-                background: openReports.length > 0 ? 'rgba(239, 68, 68, 0.05)' : 'transparent'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className={`radar-header ${openReports.length > 0 ? 'has-alerts' : ''}`}>
+                <div className="radar-title">
                     <Shield size={18} color={openReports.length > 0 ? '#ef4444' : 'var(--info)'} />
-                    <span style={{
-                        fontSize: '13px',
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        color: 'var(--text-primary)'
-                    }}>
+                    <span style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-primary)' }}>
                         Radar SMS
                     </span>
                     {openReports.length > 0 && (
-                        <span style={{
-                            background: '#ef4444',
-                            color: '#fff',
-                            fontSize: '11px',
-                            fontWeight: 700,
-                            padding: '2px 8px',
-                            borderRadius: '10px'
-                        }}>
-                            {openReports.length} ABIERTOS
+                        <span className="radar-badge">
+                            {openReports.length} {language === 'es' ? 'ABIERTOS' : 'OPEN'}
                         </span>
                     )}
                 </div>
@@ -130,21 +109,17 @@ const SMSRadarPanel = ({ onReportClick }) => {
             </div>
 
             {/* Reports List */}
-            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+            <div className="radar-list">
                 {reports.length === 0 ? (
-                    <div style={{
-                        padding: '40px 20px',
-                        textAlign: 'center',
-                        color: 'var(--text-muted)'
-                    }}>
+                    <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
                         <Shield size={32} style={{ opacity: 0.3, marginBottom: '10px' }} />
-                        <p style={{ fontSize: '13px' }}>Sin reportes de seguridad activos</p>
+                        <p style={{ fontSize: '13px' }}>{language === 'es' ? 'Sin reportes de seguridad activos' : 'No active safety reports'}</p>
                         <p style={{ fontSize: '11px', marginTop: '4px' }}>
-                            El sistema está operando normalmente
+                            {language === 'es' ? 'El sistema está operando normalmente' : 'System operating normally'}
                         </p>
                     </div>
                 ) : (
-                    reports.slice(0, 5).map((report, index) => {
+                    reports.slice(0, 5).map((report) => {
                         const riskStyle = getRiskColor(report.risk_level);
                         const statusInfo = getStatusBadge(report.status);
                         const StatusIcon = statusInfo.icon;
@@ -154,73 +129,28 @@ const SMSRadarPanel = ({ onReportClick }) => {
                             <div
                                 key={report.id}
                                 onClick={() => onReportClick && onReportClick(report)}
-                                className={isCriticalOpen ? 'critical-blink' : ''}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '12px',
-                                    padding: '14px 20px',
-                                    borderBottom: index < reports.length - 1 ? '1px solid var(--glass-border)' : 'none',
-                                    background: riskStyle.bg,
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s ease',
-                                    animation: isCriticalOpen ? 'criticalPulse 1.5s ease-in-out infinite' : 'none'
-                                }}
+                                className={`radar-item ${isCriticalOpen ? 'critical-blink' : ''}`}
                             >
                                 {/* Risk Indicator */}
-                                <div style={{
-                                    width: '8px',
-                                    height: '40px',
-                                    background: riskStyle.border,
-                                    borderRadius: '4px'
-                                }} />
+                                <div className="risk-indicator" style={{ background: riskStyle.border }} />
 
                                 {/* Content */}
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        marginBottom: '4px'
-                                    }}>
-                                        <span style={{
-                                            fontSize: '12px',
-                                            fontWeight: 700,
-                                            fontFamily: 'var(--font-mono)',
-                                            color: riskStyle.text
-                                        }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                                        <span style={{ fontSize: '12px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: riskStyle.text }}>
                                             {report.id}
                                         </span>
-                                        <span style={{
-                                            fontSize: '10px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '4px',
-                                            color: statusInfo.color
-                                        }}>
+                                        <span style={{ fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px', color: statusInfo.color }}>
                                             <StatusIcon size={12} />
                                             {statusInfo.label}
                                         </span>
                                     </div>
 
-                                    <p style={{
-                                        fontSize: '12px',
-                                        color: 'var(--text-primary)',
-                                        margin: 0,
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap'
-                                    }}>
+                                    <p style={{ fontSize: '12px', color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                         {report.description.slice(0, 60)}...
                                     </p>
 
-                                    <div style={{
-                                        display: 'flex',
-                                        gap: '12px',
-                                        marginTop: '6px',
-                                        fontSize: '10px',
-                                        color: 'var(--text-muted)'
-                                    }}>
+                                    <div style={{ display: 'flex', gap: '12px', marginTop: '6px', fontSize: '10px', color: 'var(--text-muted)' }}>
                                         <span>{getSourceLabel(report.source)}</span>
                                         <span>•</span>
                                         <span style={{ fontFamily: 'var(--font-mono)' }}>
@@ -249,7 +179,7 @@ const SMSRadarPanel = ({ onReportClick }) => {
                     justifyContent: 'space-between'
                 }}>
                     <span>MATRIZ: ICAO 5x5 | SHA-256 ENABLED</span>
-                    <span>TOTAL: {reports.length} reportes</span>
+                    <span>{language === 'es' ? 'TOTAL:' : 'TOTAL:'} {reports.length} {language === 'es' ? 'reportes' : 'reports'}</span>
                 </div>
             )}
         </div>
